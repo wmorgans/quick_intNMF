@@ -14,7 +14,7 @@ master_doc = 'index'
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../nmf_models/'))
+sys.path.insert(0, os.path.abspath('../nmf_models/'))
 
 
 # -- Project information -----------------------------------------------------
