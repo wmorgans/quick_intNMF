@@ -1,8 +1,6 @@
-import anndata as ad
 import numpy as np
-#import scanpy as sc
 import sklearn
-from  sklearn.utils.extmath import randomized_svd, squared_norm,safe_sparse_dot
+from  sklearn.utils.extmath import randomized_svd, squared_norm, safe_sparse_dot
 from sklearn.utils import check_random_state, check_array
 import time
 import scipy
