@@ -1,3 +1,5 @@
+master_doc = 'index'
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -12,7 +14,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../nmf_models/'))
+sys.path.insert(0, os.path.abspath('../nmf_models/'))
 
 
 # -- Project information -----------------------------------------------------
@@ -31,12 +33,11 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
+  'sphinx.ext.duration',
+  'sphinx.ext.doctest',
+  'sphinx.ext.autodoc',
+  'sphinx.ext.autosummary',
 ]
-
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
