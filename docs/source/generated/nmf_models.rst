@@ -1,7 +1,7 @@
 ﻿nmf\_models
 ===========
 
-.. automodule:: nmf_models
+.. automodule:: nmf_models_mod_updates
 
    
    

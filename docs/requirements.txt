@@ -1,2 +1,6 @@
 sphinx
 lutra
+furo
+numpy
+scipy
+scikit-learn
