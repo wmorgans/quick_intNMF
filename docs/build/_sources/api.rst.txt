@@ -2,6 +2,13 @@ API
 ===
 
 .. autosummary::
+<<<<<<< HEAD
     :toctree: generated
 
     nmf_models_mod_updates
+=======
+   :toctree: generated
+
+    nmf_models_mod_updates
+    plotting
+>>>>>>> 4e12c71
