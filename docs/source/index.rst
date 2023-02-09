@@ -18,9 +18,12 @@ Check out the :doc:`usage` section for further information, inculding how to :re
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+..
+    * :ref:`genindex`
+..
+    * :ref:`modindex`
+..
+    * :ref:`search`
 
 Contents
 --------
