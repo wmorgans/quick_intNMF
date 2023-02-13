@@ -1,3 +1,3 @@
-./nmf_models/nmf_models.py
-./nmf_models/nmf_models_mod_updates_reg.py
-./nmf_models/nmf_models_torch.py
+api.rst
+custom_class_template.rst
+custom_module_template.rst

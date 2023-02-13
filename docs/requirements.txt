@@ -1,0 +1,9 @@
+sphinx
+nbsphinx
+sphinx-rtd-theme
+sphinx-autodoc-typehints
+lutra
+furo
+numpy
+scipy
+scikit-learn

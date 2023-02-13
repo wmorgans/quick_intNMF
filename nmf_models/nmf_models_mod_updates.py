@@ -8,32 +8,25 @@ from scipy import sparse
 import sys
 import logging
 
-class intNMF():
-    """
-    intNMF
-    ======
 
+class intNMF():
+    """\
     Class to run int NMF on multiome data
 
     Attributes
-    ---------------
+    ----------
+    sdasd
 
-
-    Methods
-    ---------------
-
+    Parameters
+    ----------
+    n_topics (k): is the number of latent topics
+    epochs: Number of interations during optimisation
+    init: initialisation  method. random | svd
+    Lists to store training metrics.
     """
 
     def __init__(self, n_topics, epochs=200, init='random', mod1_skew=1,
                  reg=None, l1_weight=1e-4, seed=None):
-        """
-        Parameters
-        ----------
-        n_topics (k): is the number of latent topics
-        epochs: Number of interations during optimisation
-        init: initialisation  method. random | svd
-        Lists to store training metrics.
-        """
 
         if (mod1_skew > 1) or (mod1_skew < 0):
             raise ValueError
@@ -50,17 +43,21 @@ class intNMF():
         self.rand = seed
 
     def fit(self, rna_mat, atac_mat):
-        """optimise NMF. Uses accelerated Hierarchical alternating least squares algorithm proposeed here, but modified to
+        """
+        Optimise NMF.
+
+        Uses accelerated Hierarchical alternating least squares algorithm proposeed here, but modified to
         joint factorise two matrices. https://arxiv.org/pdf/1107.5194.pdf. Only required arguments are the matrices to use for factorisation.
         GEX and ATAC matrices are expected in cell by feature format. Matrices should be scipy sparse matrices.
         min ||X_rna - (theta . phi_rna)||_2 and min ||X_atac - (theta . phi_atac)||_2 s.t. theta, phi_rna, phi_atac > 0. So that theta hold the latent topic scores for a cell. And phi
         the allows recontruction of X
+
         Parameters
         ----------
         rna_mat: scipy sparse matrix of single cell gene expression
-        atac_mat: scipy sparse matrix of single cell gene expression"""
-
-        start =time.perf_counter()
+        atac_mat: scipy sparse matrix of single cell gene expression
+        """
+        start = time.perf_counter()
 
         cells = atac_mat.shape[0]
         regions = atac_mat.shape[1]
@@ -72,7 +69,7 @@ class intNMF():
         nM_rna = sparse.linalg.norm(RNA_mat, ord='fro')**2
         nM_atac = sparse.linalg.norm(ATAC_mat, ord='fro')**2
 
-        #intialise matrices. Default is random. Dense numpy arrays.
+        # Intialise matrices. Default is random. Dense numpy arrays.
         theta, phi_rna, phi_atac = self._initialize_nmf(RNA_mat, ATAC_mat, self.k, init=self.init)
 
         early_stopper = 0
@@ -160,29 +157,37 @@ class intNMF():
         del RNA_mat
         del ATAC_mat
 
-
-
     def _HALS(self, H, WtW, WtM, eit1, alpha=0.5, delta=0.1):
-        """Optimizing min_{V >= 0} ||M-UV||_F^2 with an exact block-coordinate descent schemeUpdate V.
+        """Optimizing min_{V >= 0} ||M-UV||_F^2 with an exact block-coordinate descent.
+
         UtU and UtM are exprensive to compute so multiple updates are calcuated.
-        Parameters:
-        -----------
-        V: Array like mat to update
-        UtU: precomputed dense array
-        UtM: precomputed dense array
-        eit1: precompute time
-        alpha: control time based stop criteria
-        delta: control loss based stop criteria
-        Returns
-        ---------------------
-        V: optimised array
-        n_it: number of iterations (usually 6/7)
-
         stop condition
-
         (epoch run time ) < (precompute time + current iteration time)/2
         AND
         sum of squares of updates to V at current epoch > 0.01 * sum of squares of updates to V at first epoch
+
+        Parameters:
+        -----------
+        V: Array-like
+            mat to update
+        UtU : Array-like
+            precomputed dense array
+        UtM : Array-like
+            precomputed dense array
+        eit1 : int
+            precompute time
+        alpha : float
+            control time based stop criteria
+        delta : float
+            control loss based stop criteria
+
+        Returns
+        ---------------------
+        V : Array-like
+            array-like optimised array
+        n_it : int
+            number of iterations (usually 6/7)
+
         """
         r, n = H.shape
         eit2 = time.perf_counter()  # start time
@@ -224,19 +229,27 @@ class intNMF():
 
         Parameters:
         -----------
-        W: Array like mat to update
-        atacHHt: precomputed dense array
-        atacMHt: precomputed dense array
-        rnaHHt: precomputed dense array
-        rnaMHt: precomputed dense array
-        eit1: precompute time
-        alpha: control time based stop criteria
-        delta: control loss based stop criteria
+        W : array-like
+            mat to update
+        atacHHt : array-like
+            precomputed dense array
+        atacMHt : array-like
+            precomputed dense array
+        rnaHHt : array-like
+            precomputed dense array
+        rnaMHt : array-like
+            precomputed dense array
+        eit1 : int
+            precompute time
+        alpha : float
+            Control time based stop criteria
+        delta : float
+            control loss based stop criteria
+
         Returns
         ---------------------
         V: optimised array
         n_it: number of iterations (usually 6/7)
-
         stop condition
 
         (epoch run time ) < (precompute time + current iteration time)/2
@@ -284,131 +297,143 @@ class intNMF():
     #https://github.com/CostaLab/scopen/blob/6be56fac6470e5b6ecdc5a2def25eb60ed6a1bcc/scopen/MF.py#L696
     def _initialize_nmf(self, X, ATAC_mat, n_components, eps=1e-6,
                         init='random'):
+        """Algorithms for NMF initialization.
 
-            """Algorithms for NMF initialization.
-            Computes an initial guess for the non-negative
-            rank k matrix approximation for X: X = WH
-            ParametersATAC_mat_tfidf_log
-            ----------
-            X : array-like, shape (n_samples, n_features)
-                The data matrix to be decomposed.
-            n_components : integer
-                The number of components desired in the approximation.
-            init :  None | 'random' | 'nndsvd' | 'nndsvda' | 'nndsvdar'
-                Method used to initialize the procedure.
-                Default: None.
-                Valid options:
-                - None: 'nndsvd' if n_components <= min(n_samples, n_features),
-                    otherwise 'random'.
-                - 'random': non-negative random matrices, scaled with:
-                    sqrt(X.mean() / n_components)
-                - 'nndsvd': Nonnegative Double Singular Value Decomposition (NNDSVD)
-            eps : float
-                Truncate all values less then this in output to zero.
-            random_state : int, RandomState instance or None, optional, default: None
-                If int, random_state is the seed used by the random number generator;
-                If RandomState instance, random_state is the random number generator;
-                If None, the random number generator is the RandomState instance used
-                by `np.random`. Used when ``random`` == 'nndsvdar' or 'random'.
-            Returns
-            -------
-            W : array-like, shape (n_samples, n_components)
-                Initial guesses for solving X ~= WH
-            H : array-like, shape (n_components, n_features)
-                Initial guesses for solving X ~= WH
-            H_atac : array-like, shape (n_components, n_features)
-                Initial guesses for solving X_atac ~= WH_atac
-            References
-            ----------
-            C. Boutsidis, E. Gallopoulos: SVD based initialization: A head start for
-            nonnegative matrix factorization - Pattern Recognition, 2008,
-            http://tinyurl.com/nndsvd"""
+        Computes an initial guess for the non-negative
+        rank k matrix approximation for X: X = WH
 
-            n_samples, n_features = X.shape
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The data matrix to be decomposed.
+        n_components : integer
+            The number of components desired in the approximation.
+        init :  None | 'random' | 'nndsvd' | 'nndsvda' | 'nndsvdar'
+            Method used to initialize the procedure.
+            Default: None.
+            Valid options:
+            - None: 'nndsvd' if n_components <= min(n_samples, n_features),
+                otherwise 'random'.
+            - 'random': non-negative random matrices, scaled with:
+                sqrt(X.mean() / n_components)
+            - 'nndsvd': Nonnegative Double Singular Value Decomposition (NNDSVD)
+        eps : float
+            Truncate all values less then this in output to zero.
+        random_state : int, RandomState instance or None, optional, default: None
+            If int, random_state is the seed used by the random number generator;
+            If RandomState instance, random_state is the random number generator;
+            If None, the random number generator is the RandomState instance used
+            by `np.random`. Used when ``random`` == 'nndsvdar' or 'random'.
 
-            if not sparse.issparse(X) and np.any(np.isnan(X)):
-                raise ValueError("NMF initializations with NNDSVD are not available "
-                                 "with missing values (np.nan).")
+        Returns
+        -------
+        W : array-like, shape (n_samples, n_components)
+            Initial guesses for solving X ~= WH
+        H : array-like, shape (n_components, n_features)
+            Initial guesses for solving X ~= WH
+        H_atac : array-like, shape (n_components, n_features)
+            Initial guesses for solving X_atac ~= WH_atac
+        References
+        ----------
+        C. Boutsidis, E. Gallopoulos: SVD based initialization: A head start for
+        nonnegative matrix factorization - Pattern Recognition, 2008,
+        http://tinyurl.com/nndsvd
+        """
+        
+        n_samples, n_features = X.shape
 
-            if init == 'random':
-                X_mean = X.mean()
-                avg = np.sqrt(X_mean / n_components)
-                avg_atac = np.sqrt(ATAC_mat.mean() / n_components)
+        if not sparse.issparse(X) and np.any(np.isnan(X)):
+            raise ValueError("NMF initializations with NNDSVD are not available "
+                             "with missing values (np.nan).")
 
-                rng = check_random_state(self.rand)
-                H = avg * rng.randn(n_components, n_features)
-                W = avg * rng.randn(n_samples, n_components)
-                H_atac = avg_atac * rng.randn(n_components, ATAC_mat.shape[1])
+        if init == 'random':
+            X_mean = X.mean()
+            avg = np.sqrt(X_mean / n_components)
+            avg_atac = np.sqrt(ATAC_mat.mean() / n_components)
 
-                # we do not write np.abs(H, out=H) to stay compatible with
-                # numpy 1.5 and earlier where the 'out' keyword is not
-                # supported as a kwarg on ufuncs
-                np.abs(H, H)
-                np.abs(W, W)
-                np.abs(H_atac, H_atac)
-                return W, H, H_atac
+            rng = check_random_state(self.rand)
+            H = avg * rng.randn(n_components, n_features)
+            W = avg * rng.randn(n_samples, n_components)
+            H_atac = avg_atac * rng.randn(n_components, ATAC_mat.shape[1])
 
-            # NNDSVD initialization
-            U, S, V = randomized_svd(X, n_components, random_state=self.rand)
-            W, H = np.zeros(U.shape), np.zeros(V.shape)
-
-            # The leading singular triplreget is non-negative
-            # so it can be used as is for initialization.
-            W[:, 0] = np.sqrt(S[0]) * np.abs(U[:, 0])
-            H[0, :] = np.sqrt(S[0]) * np.abs(V[0, :])
-
-            for j in range(1, n_components):
-                x, y = U[:, j], V[j, :]
-
-                # extract positive and negative parts of column vectors
-                x_p, y_p = np.maximum(x, 0), np.maximum(y, 0)
-                x_n, y_n = np.abs(np.minimum(x, 0)), np.abs(np.minimum(y, 0))
-
-                # and their norms
-                x_p_nrm, y_p_nrm = np.sqrt(squared_norm(x_p)), np.sqrt(squared_norm(y_p))
-                x_n_nrm, y_n_nrm = np.sqrt(squared_norm(x_n)), np.sqrt(squared_norm(y_n))
-
-                m_p, m_n = x_p_nrm * y_p_nrm, x_n_nrm * y_n_nrm
-
-                # choose update
-                if m_p > m_n:
-                    u = x_p / x_p_nrm
-                    v = y_p / y_p_nrm
-                    sigma = m_p
-
-                else:
-                    u = x_n / x_n_nrm
-                    v = y_n / y_n_nrm
-                    sigma = m_n
-
-                lbd = np.sqrt(S[j] * sigma)
-                W[:, j] = lbd * u
-                H[j, :] = lbd * v
-
-            W[W < eps] = 0
-            H[H < eps] = 0
-
-            H_atac = safe_sparse_dot(np.linalg.pinv(W), ATAC_mat)
-            H_atac[H_atac < eps] = 0
-
+            # we do not write np.abs(H, out=H) to stay compatible with
+            # numpy 1.5 and earlier where the 'out' keyword is not
+            # supported as a kwarg on ufuncs
+            np.abs(H, H)
+            np.abs(W, W)
+            np.abs(H_atac, H_atac)
             return W, H, H_atac
 
+        # NNDSVD initialization
+        U, S, V = randomized_svd(X, n_components, random_state=self.rand)
+        W, H = np.zeros(U.shape), np.zeros(V.shape)
 
-def log_tf_idf(mat_in, scale = 10000):
+        # The leading singular triplreget is non-negative
+        # so it can be used as is for initialization.
+        W[:, 0] = np.sqrt(S[0]) * np.abs(U[:, 0])
+        H[0, :] = np.sqrt(S[0]) * np.abs(V[0, :])
+
+        for j in range(1, n_components):
+            x, y = U[:, j], V[j, :]
+
+            # extract positive and negative parts of column vectors
+            x_p, y_p = np.maximum(x, 0), np.maximum(y, 0)
+            x_n, y_n = np.abs(np.minimum(x, 0)), np.abs(np.minimum(y, 0))
+
+            # and their norms
+            x_p_nrm, y_p_nrm = np.sqrt(squared_norm(x_p)), np.sqrt(squared_norm(y_p))
+            x_n_nrm, y_n_nrm = np.sqrt(squared_norm(x_n)), np.sqrt(squared_norm(y_n))
+
+            m_p, m_n = x_p_nrm * y_p_nrm, x_n_nrm * y_n_nrm
+
+            # choose update
+            if m_p > m_n:
+                u = x_p / x_p_nrm
+                v = y_p / y_p_nrm
+                sigma = m_p
+
+            else:
+                u = x_n / x_n_nrm
+                v = y_n / y_n_nrm
+                sigma = m_n
+
+            lbd = np.sqrt(S[j] * sigma)
+            W[:, j] = lbd * u
+            H[j, :] = lbd * v
+
+        W[W < eps] = 0
+        H[H < eps] = 0
+
+        H_atac = safe_sparse_dot(np.linalg.pinv(W), ATAC_mat)
+        H_atac[H_atac < eps] = 0
+
+        return W, H, H_atac
+
+
+def log_tf_idf(mat_in, scale=10000):
     """
     Return a TF-IDF transformed matrix.
 
-   :param mat_in: Positional (required) matrix to be TF-IDF transformed. Should be cell x feature.
-   :type mat_in: `csr matrix type <https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html>`_, or other sparse/dense matrices which can be coerced to csr format.
-   :raise nmf_models.InvalidMatType: If the mat type is invalid
-   :param scale: Optional number to scale values by.
-   :type scale: int
-   :return: TF-IDF transformed matrix
-   :rtype: csr matrix
+    Parameters
+    ----------
+
+    mat_in :  `csr matrix type <https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html>`_
+        Positional (required) matrix to be TF-IDF transformed. Should be cell x feature.
+    scale : int
+        scale values by this number (optional)
+
+    Raises
+    ------
+    nmf_models.InvalidMatType: If the mat type is invalid
+
+    Returns
+    -------
+    csr matrix
+        TF-IDF transformed matrix
     """
     mat = sparse.csr_matrix(mat_in)
 
-    cell_counts = mat.sum(axis = 1)
+    cell_counts = mat.sum(axis=1)
     for row in range(len(cell_counts)):
         mat.data[mat.indptr[row]:mat.indptr[row+1]] = (mat.data[mat.indptr[row]:mat.indptr[row+1]]*scale)/cell_counts[row]
 
@@ -423,6 +448,8 @@ def log_tf_idf(mat_in, scale = 10000):
     mat = mat.log1p()
     return mat
 
+
 class InvalidMatType(Exception):
     """Raised if the mat is invalid."""
+
     pass
