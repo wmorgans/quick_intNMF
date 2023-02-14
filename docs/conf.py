@@ -1,5 +1,3 @@
-master_doc = 'index'
-
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -41,6 +39,11 @@ extensions = [
     'IPython.sphinxext.ipython_console_highlighting',
     'sphinx.ext.napoleon'
 ]
+
+# Mappings for sphinx.ext.intersphinx. Projects have to have Sphinx-generated doc! (.inv file)
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

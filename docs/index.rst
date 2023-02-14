@@ -1,3 +1,11 @@
+.. toctree::
+    :hidden:
+    
+    Home page <self>
+    Usage <usage>
+    API reference <_autosummary/sc_nmf>
+    readme
+
 Welcome to sc_intNMF's documentation!
 =====================================
 
@@ -8,11 +16,3 @@ Contents
 --------
 
 See API reference
-
-.. toctree::
-    :hidden:
-    
-    Home page <self>
-    Usage <usage>
-    API reference <_autosummary/sc_nmf>
-    readme
