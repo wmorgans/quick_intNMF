@@ -3,7 +3,7 @@
     
     Home page <self>
     Usage <usage>
-    API reference <_autosummary/sc_nmf>
+    API reference <_autosummary/scnmf>
     readme
 
 Welcome to sc_intNMF's documentation!
