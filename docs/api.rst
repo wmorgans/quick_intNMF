@@ -3,5 +3,4 @@
     :template: custom-module-template.rst
     :recursive:
 
-    
     sc_nmf
