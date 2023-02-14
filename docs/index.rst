@@ -7,10 +7,12 @@ Welcome to sc_intNMF's documentation!
 Contents
 --------
 
-.. toctree::
-    :maxdepth: 2
+See API reference
 
-    usage
-    nmf_models
-    modules
+.. toctree::
+    :hidden:
+    
+    Home page <self>
+    Usage <usage>
+    API reference <_autosummary/sc_nmf>
     readme

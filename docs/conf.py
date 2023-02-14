@@ -14,7 +14,7 @@ master_doc = 'index'
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -32,38 +32,32 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-  'sphinx.ext.duration',
-  'sphinx.ext.doctest',
-  'sphinx.ext.autodoc',
-  'sphinx.ext.autosummary'
+    'sphinx.ext.autodoc',  # Core Sphinx library for auto html doc generation from docstrings
+    'sphinx.ext.autosummary',  # Create neat summary tables for modules/classes/methods etc
+    'sphinx.ext.intersphinx',  # Link to other project's documentation (see mapping below)
+    'sphinx.ext.viewcode',  # Add a link to the Python source code for classes, functions etc.
+    'sphinx_autodoc_typehints', # Automatically document param types (less noise in class signature)
+    'nbsphinx',  # Integrate Jupyter Notebooks and Sphinx
+    'IPython.sphinxext.ipython_console_highlighting',
+    'sphinx.ext.napoleon'
 ]
 
-extensions.append('sphinx.ext.todo')
-extensions.append('sphinx.ext.intersphinx')
-extensions.append('sphinx.ext.mathjax')
-extensions.append('sphinx.ext.viewcode')
-extensions.append('sphinx.ext.graphviz')
-extensions.append('sphinx.ext.coverage')
-extensions.append('sphinx.ext.napoleon')
-extensions.append('sphinx_autodoc_typehints')
-extensions.append('nbsphinx')
-extensions.append('sphinx.ext.napoleon')
-
-
 # Add any paths that contain templates here, relative to this directory.
-#templates_path = ['_templates']
+templates_path = ['_templates']
 
-autosummary_generate = True
-autoclass_content = 'both'
-html_show_sourcelink = False
-autodoc_inherit_docstrings = True
-set_type_checking_flag = True
-autodoc_default_flags = ['members']
+autosummary_generate = True  # Turn on sphinx.ext.autosummary
+autoclass_content = "both"  # Add __init__ doc (ie. params) to class summaries
+html_show_sourcelink = False  # Remove 'view source code' from top of page (for html, not python)
+autodoc_inherit_docstrings = True  # If no docstring, inherit from base class
+set_type_checking_flag = True  # Enable 'expensive' imports for sphinx_autodoc_typehints
+nbsphinx_allow_errors = True  # Continue through Jupyter errors
+#autodoc_typehints = "description" # Sphinx-native method. Not as good as sphinx_autodoc_typehints
+add_module_names = False # Remove namespaces from class/method signatures
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+# exclude_patterns = ['_templates', '_build']
 
 html_theme = 'sphinx_rtd_theme'
 # -- Options for HTML output -------------------------------------------------

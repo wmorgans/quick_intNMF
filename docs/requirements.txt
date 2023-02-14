@@ -2,8 +2,10 @@ sphinx
 nbsphinx
 sphinx-rtd-theme
 sphinx-autodoc-typehints
-lutra
-furo
+ipython
+jupytext
+jupyter
 numpy
 scipy
 scikit-learn
+matplotlib
