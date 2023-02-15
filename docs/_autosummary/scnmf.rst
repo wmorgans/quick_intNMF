@@ -21,8 +21,6 @@
 
 
 
-.. rubric:: Modules
-
 .. autosummary::
    :toctree:
    :recursive:

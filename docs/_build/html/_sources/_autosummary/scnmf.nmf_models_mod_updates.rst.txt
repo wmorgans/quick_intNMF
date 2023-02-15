@@ -12,6 +12,8 @@ scnmf.nmf\_models\_mod\_updates
    .. rubric:: Functions
 
    .. autosummary::
+      :toctree:
+      :nosignatures:
    
       log_tf_idf
    
@@ -22,6 +24,8 @@ scnmf.nmf\_models\_mod\_updates
    .. rubric:: Classes
 
    .. autosummary::
+      :toctree:
+      :nosignatures:
    
       intNMF
    
@@ -32,6 +36,7 @@ scnmf.nmf\_models\_mod\_updates
    .. rubric:: Exceptions
 
    .. autosummary::
+      :toctree:
    
       InvalidMatType
    
