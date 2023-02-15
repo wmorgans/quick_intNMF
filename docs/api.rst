@@ -2,4 +2,4 @@
     :toctree: _autosummary
     :recursive:
 
-    scnmf
+    nmf_models

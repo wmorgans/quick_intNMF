@@ -1,0 +1,76 @@
+[I 14:51:11.475 NotebookApp] JupyterLab extension loaded from /opt/apps/apps/binapps/anaconda3/2019.07-numpy-fix/lib/python3.7/site-packages/jupyterlab
+[I 14:51:11.475 NotebookApp] JupyterLab application directory is /opt/apps/apps/binapps/anaconda3/2019.07-numpy-fix/share/jupyter/lab
+[I 14:51:11.476 NotebookApp] Serving notebooks from local directory: /mnt/fls01-home01/j72687wm/nmf_models/docs
+[I 14:51:11.476 NotebookApp] The Jupyter Notebook is running at:
+[I 14:51:11.476 NotebookApp] http://10.10.210.19:8888/?token=6c38f70196769c50921eb9155d63e9c8a220342d080498c4
+[I 14:51:11.477 NotebookApp]  or http://127.0.0.1:8888/?token=6c38f70196769c50921eb9155d63e9c8a220342d080498c4
+[I 14:51:11.477 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 14:51:11.493 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///mnt/fls01-home01/j72687wm/.local/share/jupyter/runtime/nbserver-16576-open.html
+    Or copy and paste one of these URLs:
+        http://10.10.210.19:8888/?token=6c38f70196769c50921eb9155d63e9c8a220342d080498c4
+     or http://127.0.0.1:8888/?token=6c38f70196769c50921eb9155d63e9c8a220342d080498c4
+[I 14:52:07.008 NotebookApp] 302 GET / (10.10.3.21) 1.13ms
+[E 14:52:07.078 NotebookApp] Could not open static file ''
+[W 14:52:07.166 NotebookApp] 404 GET /static/components/react/react-dom.production.min.js (10.10.3.21) 16.78ms referer=http://localhost:8888/tree?
+[W 14:52:07.180 NotebookApp] 404 GET /static/components/react/react-dom.production.min.js (10.10.3.21) 7.56ms referer=http://localhost:8888/tree?
+[W 14:52:17.033 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 14:52:18.137 NotebookApp] Kernel started: e57d4ddb-e6bc-42b0-96e2-40d32872022f
+[I 14:52:18.828 NotebookApp] Adapting from protocol version 5.1 (kernel e57d4ddb-e6bc-42b0-96e2-40d32872022f) to 5.3 (client).
+[I 14:52:43.724 NotebookApp] Saving file at /notebooks/example_nmf.ipynb
+[W 14:52:43.728 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 14:54:16.670 NotebookApp] Saving file at /notebooks/example_nmf.ipynb
+[W 14:54:16.674 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 14:58:18.212 NotebookApp] Saving file at /notebooks/example_nmf.ipynb
+[W 14:58:18.215 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 14:59:35.706 NotebookApp] Saving file at /notebooks/example_nmf.ipynb
+[W 14:59:35.710 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[W 15:03:31.401 NotebookApp] 404 GET /static/components/react/react-dom.production.min.js (10.10.3.21) 3.45ms referer=http://localhost:8888/notebooks/notebooks/example_nmf.ipynb
+[W 15:03:31.838 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 15:03:33.004 NotebookApp] Adapting from protocol version 5.1 (kernel e57d4ddb-e6bc-42b0-96e2-40d32872022f) to 5.3 (client).
+[I 15:05:58.890 NotebookApp] Creating new notebook in /notebooks
+[W 15:05:59.396 NotebookApp] 404 GET /static/components/react/react-dom.production.min.js (10.10.3.21) 2.95ms referer=http://localhost:8888/notebooks/notebooks/Untitled.ipynb?kernel_name=bioinf_py
+[I 15:05:59.873 NotebookApp] Kernel started: 3570246c-5e13-4383-8513-8d26c44fde8f
+[I 15:06:21.139 NotebookApp] Creating new notebook in /notebooks
+[W 15:06:21.489 NotebookApp] 404 GET /static/components/react/react-dom.production.min.js (10.10.3.21) 1.81ms referer=http://localhost:8888/notebooks/notebooks/Untitled.ipynb?kernel_name=bioinf_py
+[I 15:06:21.847 NotebookApp] Kernel started: 640b61a6-fd82-43b5-8d81-208d8c952ade
+[I 15:07:59.852 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:08:22.845 NotebookApp] Saving file at /notebooks/h5ad_example.ipynb
+[I 15:09:41.269 NotebookApp] Starting buffering for 640b61a6-fd82-43b5-8d81-208d8c952ade:d3c3a6285cdd48ac8928bc32ea6455a1
+[I 15:09:59.853 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:12:00.831 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:15:59.838 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:17:59.851 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:20:00.675 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:21:59.837 NotebookApp] Saving file at /notebooks/h5mu_example.ipynb
+[I 15:23:59.838 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:24:44.376 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:25:31.241 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:25:56.263 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:27:23.786 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:27:59.836 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:29:05.006 NotebookApp] Starting buffering for 3570246c-5e13-4383-8513-8d26c44fde8f:b72198fbd3104c0ca135d9a7ee1d82a2
+[I 15:29:05.520 NotebookApp] Kernel shutdown: 3570246c-5e13-4383-8513-8d26c44fde8f
+[I 15:29:05.632 NotebookApp] Kernel started: 0ebaf405-35a3-4811-aef6-61b3d8f29f4e
+[I 15:29:33.784 NotebookApp] Saving file at /notebooks/example_nmf.ipynb
+[W 15:29:33.788 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 15:29:34.437 NotebookApp] Starting buffering for e57d4ddb-e6bc-42b0-96e2-40d32872022f:5a234266c15d45db812caf2b73dbc61d
+[W 15:29:48.466 NotebookApp] 404 GET /static/components/react/react-dom.production.min.js (10.10.3.21) 2.70ms referer=http://localhost:8888/notebooks/notebooks/example_nmf.ipynb
+[W 15:29:48.943 NotebookApp] Notebook notebooks/example_nmf.ipynb is not trusted
+[I 15:29:50.101 NotebookApp] Adapting from protocol version 5.1 (kernel e57d4ddb-e6bc-42b0-96e2-40d32872022f) to 5.3 (client).
+[I 15:30:00.823 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 15:30:06.726 NotebookApp] Starting buffering for e57d4ddb-e6bc-42b0-96e2-40d32872022f:9322f1deaa3e401a922f63e355d63c2b
+[I 15:31:59.837 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:48:44.052 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:48:49.955 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:49:59.840 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:50:15.522 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:51:59.836 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:53:59.834 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:55:59.834 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:57:59.836 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 16:59:59.837 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 17:02:00.829 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb
+[I 17:02:41.696 NotebookApp] Saving file at /notebooks/intNMF_example.ipynb

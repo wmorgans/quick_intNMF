@@ -1,0 +1,30 @@
+﻿nmf\_models
+===========
+
+.. automodule:: nmf_models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   nmf_models.nmf_models_mod_updates
+   nmf_models.plotting
+
