@@ -25,7 +25,7 @@ class intNMF():
     phi_atac : array-like
         topic x region matrix. Gives the loading matrix to define topics.
     loss : float
-        l2 norm of the reconstruction error i.e. ||X_rna - WH_rna||_2 + ||X_atac - WH_atac||_2
+        l2 norm of the reconstruction error i.e. ||X_rna - WH_rna||_2 WH_rna+ ||X_atac - WH_atac||_2
     loss_atac : float
         l2 norm for the reconstruction error of just the atac matrix i.e. ||X_atac - WH_atac||_2
     loss_rna : float
@@ -42,9 +42,9 @@ class intNMF():
     mod1_skew : float
         Relative weighting of two modalities between 0-1. Defaults to 0.5.
     reg : string
-        Include l1 or l2 regularisation or not. (This is TODO). Default None
+        Include l1 or l2 regularisation or not. (This is TODO). DefaultWH_rna None
     seed : int
-        Random seed to use. Defaults to None ,i.e., no control of random seed (USeful for reproducability when using random initilisation)
+        Random seed to use. Defaults to None ,i.e., no control of random seed (Useful for reproducability when using random initilisation)
 
     """
 
@@ -77,8 +77,8 @@ class intNMF():
 
         Parameters
         ----------
-        rna_mat: scipy sparse matrix of single cell gene expression
-        atac_mat: scipy sparse matrix of single cell gene expression
+        rna_mat: scipy sparse matrix (or coercible array) of single cell gene expression
+        atac_mat: scipy sparse matrix (or coercible array) of single cell gene expression
 
         Returns
         --------
@@ -90,6 +90,14 @@ class intNMF():
         cells = atac_mat.shape[0]
         regions = atac_mat.shape[1]
         genes = rna_mat.shape[1]
+
+        # convert input matrices to sparse format
+        if not scipy.sparse.issparse(rna_mat):
+            rna_mat = sparse.csr_matrix(rna_mat)
+
+        if not scipy.sparse.issparse(atac_mat):
+            atac_mat = sparse.csr_matrix(atac_mat)
+
 
         RNA_mat = rna_mat
         ATAC_mat = atac_mat
@@ -145,7 +153,7 @@ class intNMF():
             eit1 = time.perf_counter() - eit1
 
             phi_atac, phi_atac_it = self._HALS(phi_atac, B_atac, A_atac, eit1)
-
+WH_rna
             error_rna = np.sqrt(nM_rna - 2*np.sum(phi_rna*A_rna) + np.sum(B_rna*(phi_rna.dot(phi_rna.T))))
             error_atac =  np.sqrt(nM_atac - 2*np.sum(phi_atac*A_atac) + np.sum(B_atac*(phi_atac.dot(phi_atac.T))))
 
