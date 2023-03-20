@@ -11,6 +11,7 @@ import scipy
 from scipy import sparse
 import sys
 import logging
+from typing import Optional, Union, Mapping, List  # Special
 
 
 class intNMF():
@@ -25,7 +26,7 @@ class intNMF():
     phi_atac : array-like
         topic x region matrix. Gives the loading matrix to define topics.
     loss : float
-        l2 norm of the reconstruction error i.e. ||X_rna - WH_rna||_2 WH_rna+ ||X_atac - WH_atac||_2
+        l2 norm of the reconstruction error i.e. ||X_rna - WH_rna||_2 + ||X_atac - WH_atac||_2
     loss_atac : float
         l2 norm for the reconstruction error of just the atac matrix i.e. ||X_atac - WH_atac||_2
     loss_rna : float
@@ -42,14 +43,14 @@ class intNMF():
     mod1_skew : float
         Relative weighting of two modalities between 0-1. Defaults to 0.5.
     reg : string
-        Include l1 or l2 regularisation or not. (This is TODO). DefaultWH_rna None
+        Include l1 or l2 regularisation or not. (This is TODO). Default None
     seed : int
         Random seed to use. Defaults to None ,i.e., no control of random seed (Useful for reproducability when using random initilisation)
 
     """
 
-    def __init__(self, n_topics, epochs=15, init='random', mod1_skew=0.5,
-                 reg=None, seed=None):
+    def __init__(self, n_topics: int, epochs: Optional[int] = 15, init: Optional[str]='random',
+                 mod1_skew: Optional[float]=0.5, seed: Optional[int] = None, reg = None):
 
         if (mod1_skew > 1) or (mod1_skew < 0):
             raise ValueError
@@ -64,12 +65,34 @@ class intNMF():
         self.epoch_times = []
         self.epoch_iter = []
         self.rand = seed
+        self.rna_features = None
+        self.atac_features = None 
 
-    def fit(self, rna_mat, atac_mat):
+    def _add_feature_names(self, rna_names: List[str], atac_names: Optional[List[str]] = None):
+        """
+        Add feature names to the nmf model. This is useful for plotting functions
+
+        Parameters
+        ----------
+        rna_names: list of gene names must be same length as columns in rna_mat
+        atac_names: Optional list. Must be the same length as columns in atac_mat
+        """
+        if len(rna_names) != self.phi_rna.shape[1]:
+            print('rna dims dont match. Features not added')
+            return
+        self.rna_features = rna_names 
+
+        if atac_names is not None:
+            if len(atac_names) != self.phi_atac.shape[1]:
+                print('atac deatures not added. Dims dont match')
+            self.atac_features = atac_names
+
+    def fit(self, rna_mat: Union[np.array,  sparse.csr_matrix], atac_mat: Union[np.array,  sparse.csr_matrix],
+            rna_names: Optional[List[str]] = None, atac_names = None):
         """
         Optimise NMF.
 
-        Uses accelerated Hierarchical alternating least squares algorithm proposeed here, but modified to
+        Uses accelerated Hierarchical alternating least squares algorithm proposed here, but modified to
         joint factorise two matrices. https://arxiv.org/pdf/1107.5194.pdf. Only required arguments are the matrices to use for factorisation.
         GEX and ATAC matrices are expected in cell by feature format. Matrices should be scipy sparse matrices.
         min ||X_rna - (theta . phi_rna)||_2 and min ||X_atac - (theta . phi_atac)||_2 s.t. theta, phi_rna, phi_atac > 0. So that theta hold the latent topic scores for a cell. And phi
@@ -77,27 +100,29 @@ class intNMF():
 
         Parameters
         ----------
-        rna_mat: scipy sparse matrix (or coercible array) of single cell gene expression
-        atac_mat: scipy sparse matrix (or coercible array) of single cell gene expression
+        rna_mat: scipy sparse matrix (or coercible) of single cell gene expression
+        atac_mat: scipy sparse matrix (or coercible) of single cell gene expression
+        rna_names: Optional list of gene names must be same length as columns in rna_mat
+        atac_names: Optional list. Must be the same length as columns in atac_mat
 
         Returns
         --------
         self
             Access low dim embed with self.theta or the loadings with self.phi_rna or self.phi_atac
         """
-        start = time.perf_counter()
 
-        cells = atac_mat.shape[0]
-        regions = atac_mat.shape[1]
-        genes = rna_mat.shape[1]
-
-        # convert input matrices to sparse format
+        # if input matrices not sparse convert to sparse
         if not scipy.sparse.issparse(rna_mat):
             rna_mat = sparse.csr_matrix(rna_mat)
 
         if not scipy.sparse.issparse(atac_mat):
             atac_mat = sparse.csr_matrix(atac_mat)
 
+        start = time.perf_counter()
+
+        cells = atac_mat.shape[0]
+        regions = atac_mat.shape[1]
+        genes = rna_mat.shape[1]
 
         RNA_mat = rna_mat
         ATAC_mat = atac_mat
@@ -153,7 +178,7 @@ class intNMF():
             eit1 = time.perf_counter() - eit1
 
             phi_atac, phi_atac_it = self._HALS(phi_atac, B_atac, A_atac, eit1)
-WH_rna
+
             error_rna = np.sqrt(nM_rna - 2*np.sum(phi_rna*A_rna) + np.sum(B_rna*(phi_rna.dot(phi_rna.T))))
             error_atac =  np.sqrt(nM_atac - 2*np.sum(phi_atac*A_atac) + np.sum(B_atac*(phi_atac.dot(phi_atac.T))))
 
@@ -187,6 +212,9 @@ WH_rna
         self.phi_atac = phi_atac
 
         end = time.perf_counter()
+
+        if rna_names is not None:
+            self._add_feature_names(rna_names, atac_names)
 
         self.total_time = end - start
         logging.info(self.total_time)
@@ -347,12 +375,10 @@ WH_rna
             The data matrix to be decomposed.
         n_components : integer
             The number of components desired in the approximation.
-        init :  None | 'random' | 'nndsvd' | 'nndsvda' | 'nndsvdar'
+        init :  None | 'random' | 'nndsvd'
             Method used to initialize the procedure.
-            Default: None.
+            Default: 'random'.
             Valid options:
-            - None: 'nndsvd' if n_components <= min(n_samples, n_features),
-                otherwise 'random'.
             - 'random': non-negative random matrices, scaled with:
                 sqrt(X.mean() / n_components)
             - 'nndsvd': Nonnegative Double Singular Value Decomposition (NNDSVD)
