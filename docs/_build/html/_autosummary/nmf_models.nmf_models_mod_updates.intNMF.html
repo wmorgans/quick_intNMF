@@ -11,10 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -49,14 +50,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="nmf_models.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.html">nmf_models.nmf_models_mod_updates</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.log_tf_idf.html">nmf_models.nmf_models_mod_updates.log_tf_idf</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">nmf_models.nmf_models_mod_updates.intNMF</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#nmf_models.nmf_models_mod_updates.intNMF"><code class="docutils literal notranslate"><span class="pre">intNMF</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">nmf_models.nmf_models_mod_updates.intNMF</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.InvalidMatType.html">nmf_models.nmf_models_mod_updates.InvalidMatType</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="nmf_models.plotting.html">nmf_models.plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nmf_models.utils.html">nmf_models.utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
@@ -115,7 +114,7 @@
 <h1>nmf_models.nmf_models_mod_updates.intNMF<a class="headerlink" href="#nmf-models-nmf-models-mod-updates-intnmf" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intNMF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_topics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mod1_skew</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nmf_models/nmf_models_mod_updates.html#intNMF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intNMF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_topics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mod1_skew</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nmf_models/nmf_models_mod_updates.html#intNMF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class to run int NMF on multiome data</p>
 <dl class="py attribute">
@@ -192,7 +191,7 @@
 <li><p><strong>init</strong> (<em>string</em>) – Method of initialising W and H. Defaults to random.</p></li>
 <li><p><strong>mod1_skew</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Relative weighting of two modalities between 0-1. Defaults to 0.5.</p></li>
 <li><p><strong>reg</strong> (<em>string</em>) – Include l1 or l2 regularisation or not. (This is TODO). Default None</p></li>
-<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Random seed to use. Defaults to None ,i.e., no control of random seed (USeful for reproducability when using random initilisation)</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Random seed to use. Defaults to None ,i.e., no control of random seed (Useful for reproducability when using random initilisation)</p></li>
 </ul>
 </dd>
 </dl>
@@ -206,9 +205,9 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rna_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atac_mat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nmf_models/nmf_models_mod_updates.html#intNMF.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rna_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atac_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rna_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atac_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nmf_models/nmf_models_mod_updates.html#intNMF.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Optimise NMF.</p>
-<p>Uses accelerated Hierarchical alternating least squares algorithm proposeed here, but modified to
+<p>Uses accelerated Hierarchical alternating least squares algorithm proposed here, but modified to
 joint factorise two matrices. <a class="reference external" href="https://arxiv.org/pdf/1107.5194.pdf">https://arxiv.org/pdf/1107.5194.pdf</a>. Only required arguments are the matrices to use for factorisation.
 GEX and ATAC matrices are expected in cell by feature format. Matrices should be scipy sparse matrices.
 min ||X_rna - (theta . phi_rna)||_2 and min ||X_atac - (theta . phi_atac)||_2 s.t. theta, phi_rna, phi_atac &gt; 0. So that theta hold the latent topic scores for a cell. And phi
@@ -216,8 +215,10 @@ the allows recontruction of X</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rna_mat</strong> (<em>scipy sparse matrix</em><em> of </em><em>single cell gene expression</em>) – </p></li>
-<li><p><strong>atac_mat</strong> (<em>scipy sparse matrix</em><em> of </em><em>single cell gene expression</em>) – </p></li>
+<li><p><strong>rna_mat</strong> (<em>scipy sparse matrix</em><em> (or </em><em>coercible</em><em>) </em><em>of single cell gene expression</em>) – </p></li>
+<li><p><strong>atac_mat</strong> (<em>scipy sparse matrix</em><em> (or </em><em>coercible</em><em>) </em><em>of single cell gene expression</em>) – </p></li>
+<li><p><strong>rna_names</strong> (<em>Optional list of gene names must be same length as columns in rna_mat</em>) – </p></li>
+<li><p><strong>atac_names</strong> (<em>Optional list. Must be the same length as columns in atac_mat</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>intNMF example &mdash; sc_intNMF 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="intNMF examples" href="example_nmf.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sc_intNMF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Jupyter Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#run-intNMF-package">run intNMF package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Integration-with-muon">Integration with muon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#intNMF-plotting-functions">intNMF plotting functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#View-matrices">View matrices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#View-correlations">View correlations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#NMF-feature-plots">NMF feature plots</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_nmf.html">Multiple examples (old)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/nmf_models.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sc_intNMF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">intNMF example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="intNMF-example">
+<h1>intNMF example<a class="headerlink" href="#intNMF-example" title="Permalink to this heading"></a></h1>
+<p>example using a 10x dataset with cell type annotations. Firstly download the data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[183]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="c1">#wget --no-check-certificate --no-verbose -P ../data/  https://costalab.ukaachen.de/open_data/MOJITOO/PBMC-Multiom_annotation.tsv</span>
+<span class="c1">#wget --no-verbose -P ../data/ https://cf.10xgenomics.com/samples/cell-arc/1.0.0/pbmc_granulocyte_sorted_10k/pbmc_granulocyte_sorted_10k_filtered_feature_bc_matrix.h5</span>
+</pre></div>
+</div>
+</div>
+<p>import required packages for loading the data then load the data</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[184]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
+<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">path_to_nmf</span> <span class="o">=</span> <span class="s1">&#39;../../nmf_models/&#39;</span>
+<span class="n">module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to_nmf</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">module_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">nmf_models_mod_updates</span> <span class="kn">import</span> <span class="n">intNMF</span><span class="p">,</span> <span class="n">log_tf_idf</span>
+<span class="kn">import</span> <span class="nn">utils</span>
+<span class="kn">import</span> <span class="nn">plotting</span> <span class="k">as</span> <span class="nn">pl</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[185]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;../data/pbmc_granulocyte_sorted_10k_filtered_feature_bc_matrix.h5&#39;</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="s1">&#39;../data/PBMC-Multiom_annotation.tsv&#39;</span>
+
+<span class="n">mu_data</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_multiome</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Variable names are not unique. To make them unique, call `.var_names_make_unique`.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Added `interval` annotation for features from ../data/pbmc_granulocyte_sorted_10k_filtered_feature_bc_matrix.h5
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Variable names are not unique. To make them unique, call `.var_names_make_unique`.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[186]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_data</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[186]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<pre>MuData object with n_obs × n_vars = 11787 × 144978
+  obs:      &#x27;clusters&#x27;, &#x27;annotation&#x27;
+  var:      &#x27;feature_types&#x27;, &#x27;gene_ids&#x27;, &#x27;genome&#x27;, &#x27;interval&#x27;
+  2 modalities
+    rna:    11787 x 36601
+      var:  &#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;genome&#x27;, &#x27;interval&#x27;
+    atac:   11787 x 108377
+      var:  &#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;genome&#x27;, &#x27;interval&#x27;</pre></div>
+</div>
+<section id="run-intNMF-package">
+<h2>run intNMF package<a class="headerlink" href="#run-intNMF-package" title="Permalink to this heading"></a></h2>
+<p>tf-idf transform the data. In reality we would want to do some feature and cell filtering</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[187]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_tf_idf</span> <span class="o">=</span> <span class="n">log_tf_idf</span><span class="p">(</span><span class="n">mu_data</span><span class="p">[</span><span class="s1">&#39;rna&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="n">atac_tf_idf</span> <span class="o">=</span> <span class="n">log_tf_idf</span><span class="p">(</span><span class="n">mu_data</span><span class="p">[</span><span class="s1">&#39;atac&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[188]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">atac_tf_idf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[188]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;11787x108377 sparse matrix of type &#39;&lt;class &#39;numpy.float32&#39;&gt;&#39;
+        with 84935771 stored elements in Compressed Sparse Column format&gt;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[189]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_tf_idf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[189]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;11787x36601 sparse matrix of type &#39;&lt;class &#39;numpy.float32&#39;&gt;&#39;
+        with 23463054 stored elements in Compressed Sparse Column format&gt;
+</pre></div></div>
+</div>
+<p>Run NMF model with 10 factors/topics. Aditionally add feature names to the object to help with plotting later.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[190]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nmf_model</span> <span class="o">=</span> <span class="n">intNMF</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># NMF model with k=10</span>
+<span class="n">nmf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">rna_tf_idf</span><span class="p">,</span> <span class="n">atac_tf_idf</span><span class="p">,</span> <span class="n">mu_data</span><span class="p">[</span><span class="s1">&#39;rna&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mu_data</span><span class="p">[</span><span class="s1">&#39;atac&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<p>We can access the embedding with .theta, and the feature specfic loading matrices with .phi_rna and .phi_atac</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[191]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nmf_model</span><span class="o">.</span><span class="n">theta</span>
+<span class="n">nmf_model</span><span class="o">.</span><span class="n">phi_rna</span>
+<span class="n">nmf_model</span><span class="o">.</span><span class="n">phi_atac</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[191]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([[2.11512070e-16, 2.11512070e-16, 2.11512070e-16, ...,
+        2.11512070e-16, 2.11512070e-16, 2.11512070e-16],
+       [1.75223429e-02, 1.47215956e-02, 2.11512070e-16, ...,
+        1.13700700e-01, 1.08574417e-01, 5.93477050e-01],
+       [1.07057779e-02, 2.21707435e-02, 3.85591509e-02, ...,
+        5.37183823e-02, 9.19214428e-03, 3.23626418e-02],
+       ...,
+       [2.11512070e-16, 2.11512070e-16, 2.11512070e-16, ...,
+        2.11512070e-16, 2.11512070e-16, 2.11512070e-16],
+       [2.11512039e-16, 2.11512039e-16, 2.11512039e-16, ...,
+        1.77085012e-01, 2.03864088e-02, 2.11512039e-16],
+       [2.34667082e-02, 8.73063661e-02, 2.52739063e-02, ...,
+        1.23250367e-01, 2.31904270e-02, 5.52530846e-02]])
+</pre></div></div>
+</div>
+<p>These attributes can be added to the muon object so that muons analysis and plotting tools can be used.</p>
+</section>
+<section id="Integration-with-muon">
+<h2>Integration with muon<a class="headerlink" href="#Integration-with-muon" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[192]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_data</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;intNMF&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nmf_model</span><span class="o">.</span><span class="n">theta</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[193]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_data</span><span class="p">[</span><span class="s1">&#39;rna&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;intNMF&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nmf_model</span><span class="o">.</span><span class="n">phi_rna</span><span class="o">.</span><span class="n">T</span>
+<span class="n">mu_data</span><span class="p">[</span><span class="s1">&#39;atac&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;intNMF&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nmf_model</span><span class="o">.</span><span class="n">phi_atac</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<p>For example to plot a UMAP and perform leiden clustering using muon</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[195]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mu_data</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;intNMF&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">mu_data</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s1">&#39;leiden_joint&#39;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mu_data</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[202]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;max_topic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">nmf_model</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;max_topic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;max_topic&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[203]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_data</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[203]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<pre>MuData object with n_obs × n_vars = 11787 × 144978
+  obs:      &#x27;clusters&#x27;, &#x27;annotation&#x27;, &#x27;leiden_joint&#x27;, &#x27;max_topic&#x27;
+  var:      &#x27;feature_types&#x27;, &#x27;gene_ids&#x27;, &#x27;genome&#x27;, &#x27;interval&#x27;
+  obsm:     &#x27;intNMF&#x27;, &#x27;X_umap&#x27;
+  obsp:     &#x27;distances&#x27;, &#x27;connectivities&#x27;
+  2 modalities
+    rna:    11787 x 36601
+      var:  &#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;genome&#x27;, &#x27;interval&#x27;
+      varm: &#x27;intNMF&#x27;
+    atac:   11787 x 108377
+      var:  &#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;genome&#x27;, &#x27;interval&#x27;
+      varm: &#x27;intNMF&#x27;</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[204]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mu_data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;leiden_joint&quot;</span><span class="p">,</span> <span class="s2">&quot;annotation&quot;</span><span class="p">,</span> <span class="s2">&quot;max_topic&quot;</span><span class="p">])</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/fls01-home01/j72687wm/mambaforge/envs/single-cell_python/lib/python3.8/site-packages/IPython/core/pylabtools.py:151: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.canvas.print_figure(bytes_io, **kw)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_22_1.png" src="../_images/notebooks_intNMF_example_22_1.png" />
+</div>
+</div>
+</section>
+<section id="intNMF-plotting-functions">
+<h2>intNMF plotting functions<a class="headerlink" href="#intNMF-plotting-functions" title="Permalink to this heading"></a></h2>
+<p>As well as using muons plotting functions, the intNMF package has its own plotting capabilities in its plotting module.</p>
+<section id="View-matrices">
+<h3>View matrices<a class="headerlink" href="#View-matrices" title="Permalink to this heading"></a></h3>
+<p>.view_embed and .view_loadings and be used to visualise theta, phi_rna and phi_atac</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[205]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">view_embed</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">view_embed</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">clustered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0008483922965979468
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[205]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;seaborn.matrix.ClusterGrid at 0x2b064762ddc0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_24_2.png" src="../_images/notebooks_intNMF_example_24_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_24_3.png" src="../_images/notebooks_intNMF_example_24_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[206]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">view_loadings</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span> <span class="c1">#can also view a single modality with atac or rna</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+3660.1
+10837.7
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/fls01-home01/j72687wm/nmf_models/nmf_models/plotting.py:117: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_25_2.png" src="../_images/notebooks_intNMF_example_25_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[207]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">view_loadings</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">clustered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#can also view a single modality with atac or rna</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_26_0.png" src="../_images/notebooks_intNMF_example_26_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_26_1.png" src="../_images/notebooks_intNMF_example_26_1.png" />
+</div>
+</div>
+</section>
+<section id="View-correlations">
+<h3>View correlations<a class="headerlink" href="#View-correlations" title="Permalink to this heading"></a></h3>
+<p>topic correlations can be visualised at the topic activity level (theta) or the feature level (phi_atac and phi_rna). Again clustered on unclustered.</p>
+<p>default is to plot both modalities, but a single modality can be selected with modality = ‘atac’ or ‘rna’</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[220]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">correlation_loadings</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">clustered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">correlation_loadings</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">clustered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_28_0.png" src="../_images/notebooks_intNMF_example_28_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_28_1.png" src="../_images/notebooks_intNMF_example_28_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_28_2.png" src="../_images/notebooks_intNMF_example_28_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[218]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">correlation_embed</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">clustered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">correlation_embed</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">clustered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[218]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;seaborn.matrix.ClusterGrid at 0x2b0647868370&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_29_1.png" src="../_images/notebooks_intNMF_example_29_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_29_2.png" src="../_images/notebooks_intNMF_example_29_2.png" />
+</div>
+</div>
+</section>
+<section id="NMF-feature-plots">
+<h3>NMF feature plots<a class="headerlink" href="#NMF-feature-plots" title="Permalink to this heading"></a></h3>
+<p>We can also create plots which use the NMF embedding to generate scatter plots and colour cells by values. Because NMF is a linear method, unlike UMAP, we can project features onto these plots.</p>
+<section id="Bi-plots">
+<h4>Bi plots<a class="headerlink" href="#Bi-plots" title="Permalink to this heading"></a></h4>
+<p>The defualt behavious of plotting.factor_biplot is to plot factor/topic 0 and 1, take the features with the largest absolute contribution to these topics and plot no labels. In this example I use diff as the mode which takes the feature with the largest difference between the two topics being plotted. As this dataset has annotated cell types I’ve also coloured the cells by their type.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[223]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">factor_biplot</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">TX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">TY</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;diff&#39;</span><span class="p">,</span> <span class="n">labs</span><span class="o">=</span><span class="n">mu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;annotation&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[223]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:xlabel=&#39;Factor 0&#39;, ylabel=&#39;Factor 1&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_31_1.png" src="../_images/notebooks_intNMF_example_31_1.png" />
+</div>
+</div>
+<p>We can also do the same but with ATAC features annotated. Possibly less informative but we can copy and paste the values into the genome browser to see the nearby genes.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[271]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">top_features</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">factor_biplot</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">TX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">TY</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;diff&#39;</span><span class="p">,</span> <span class="n">modality</span><span class="o">=</span><span class="s1">&#39;atac&#39;</span><span class="p">,</span> <span class="n">n_labs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_33_0.png" src="../_images/notebooks_intNMF_example_33_0.png" />
+</div>
+</div>
+<p>Here I look at the size of the atac regions provdided by abs and diff compared to all of the atac regions. Both methods are skewed towards larger regions, but abs suffers more from this.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[268]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">top_features</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">factor_biplot</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">TX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">TY</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;diff&#39;</span><span class="p">,</span> <span class="n">modality</span><span class="o">=</span><span class="s1">&#39;atac&#39;</span><span class="p">,</span> <span class="n">n_labs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">nmf_model</span><span class="o">.</span><span class="n">atac_features</span><span class="p">]</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">diff</span><span class="p">]</span>
+
+<span class="n">diff_top</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">top_features</span><span class="p">]</span>
+<span class="n">diff_top</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">diff_top</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_35_0.png" src="../_images/notebooks_intNMF_example_35_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[269]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">top_features_abs</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">factor_biplot</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">TX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">TY</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;abs&#39;</span><span class="p">,</span> <span class="n">modality</span><span class="o">=</span><span class="s1">&#39;atac&#39;</span><span class="p">,</span> <span class="n">n_labs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">nmf_model</span><span class="o">.</span><span class="n">atac_features</span><span class="p">]</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">diff</span><span class="p">]</span>
+
+<span class="n">abs_top</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">top_features_abs</span><span class="p">]</span>
+<span class="n">abs_top</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">abs_top</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_36_0.png" src="../_images/notebooks_intNMF_example_36_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diff_top</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;diff top&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">abs_top</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;abs top&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x2b05fe074190&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_37_1.png" src="../_images/notebooks_intNMF_example_37_1.png" />
+</div>
+</div>
+</section>
+<section id="Weight-rankings">
+<h4>Weight rankings<a class="headerlink" href="#Weight-rankings" title="Permalink to this heading"></a></h4>
+<p>Plot the weight values for a given topic</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_rank</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:xlabel=&#39;Feature rank&#39;, ylabel=&#39;Factor loading&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_39_1.png" src="../_images/notebooks_intNMF_example_39_1.png" />
+</div>
+</div>
+<p>Plot the top features for all topics. You can also annotate plots with user chosen features</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;HNF4A&#39;</span> <span class="ow">in</span> <span class="n">nmf_model</span><span class="o">.</span><span class="n">rna_features</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+True
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[230]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HNF4A&#39;</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_rank</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="n">select</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+adding genes
+adding genes
+adding genes
+adding genes
+adding genes
+adding genes
+adding genes
+adding genes
+adding genes
+adding genes
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_42_1.png" src="../_images/notebooks_intNMF_example_42_1.png" />
+</div>
+</div>
+<p>The functions also work for atac features</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_rank</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">modality</span><span class="o">=</span><span class="s1">&#39;atac&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_44_0.png" src="../_images/notebooks_intNMF_example_44_0.png" />
+</div>
+</div>
+</section>
+<section id="Weight-scatter-plots">
+<h4>Weight scatter plots<a class="headerlink" href="#Weight-scatter-plots" title="Permalink to this heading"></a></h4>
+<p>In addition to rank plots we can compare a features weights between multiple factors/topics. While annotating the features with the highest absolute values. The key arguments for this function are nmf_model and a tuple of the factors to use as the axis</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[276]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_scatter</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[276]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:xlabel=&#39;Factor 0&#39;, ylabel=&#39;Factor 1&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_46_1.png" src="../_images/notebooks_intNMF_example_46_1.png" />
+</div>
+</div>
+</section>
+<section id="weights-bar-charts">
+<h4>weights bar charts<a class="headerlink" href="#weights-bar-charts" title="Permalink to this heading"></a></h4>
+<p>For a list of genes plot their weights in factors of interest. We need a list of genes to plot. utils.get_top_features() can be used to do this. The only required arg is an intNMF model. Optional args include topics, n_features, modality and mode. The default behavious to use all topics, return the top feature, use the rna modality and take the absolute value.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[277]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_genes_diff</span><span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_top_features</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;diff&#39;</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[278]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_genes_abs</span><span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_top_features</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;abs&#39;</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[279]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_genes</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[279]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;MALAT1&#39;,
+ &#39;VCAN&#39;,
+ &#39;CDKN1C&#39;,
+ &#39;MALAT1&#39;,
+ &#39;LEF1&#39;,
+ &#39;INPP4B&#39;,
+ &#39;BANK1&#39;,
+ &#39;RPL3&#39;,
+ &#39;LINC01374&#39;,
+ &#39;GNLY&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[280]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_bar</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">top_genes_abs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[280]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_51_1.png" src="../_images/notebooks_intNMF_example_51_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[281]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_bar</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">top_genes_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[281]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_52_1.png" src="../_images/notebooks_intNMF_example_52_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[282]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">plot_weights_bar</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">,</span> <span class="n">top_genes_diff</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[282]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_53_1.png" src="../_images/notebooks_intNMF_example_53_1.png" />
+</div>
+</div>
+<p>We can also plot the loss of the nmf_model for each epoch during training (this is just qc). The loss should monotonically decrease.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[283]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">nmf_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_55_0.png" src="../_images/notebooks_intNMF_example_55_0.png" />
+</div>
+</div>
+<p>Finally any of nmf_model.theta, nmf_model.phi_rna and nmf_model.phi_atac can be clustered. For example hierarchical clustering of the phi_rna matrix. Groups topics based on similarity of the feature weights. Clustering featrues takes longer as there are many more features than topic/factor.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[284]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">linkage</span><span class="p">,</span> <span class="n">dendrogram</span><span class="p">,</span> <span class="n">fcluster</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">squareform</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">corr_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">nmf_model</span><span class="o">.</span><span class="n">phi_rna</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">dissimilarity</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">corr_mat</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">linkage</span><span class="p">(</span><span class="n">squareform</span><span class="p">(</span><span class="n">dissimilarity</span><span class="p">),</span> <span class="s1">&#39;complete&#39;</span><span class="p">)</span>
+
+<span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span>
+           <span class="n">leaf_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[284]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;icoord&#39;: [[35.0, 35.0, 45.0, 45.0],
+  [25.0, 25.0, 40.0, 40.0],
+  [15.0, 15.0, 32.5, 32.5],
+  [5.0, 5.0, 23.75, 23.75],
+  [65.0, 65.0, 75.0, 75.0],
+  [55.0, 55.0, 70.0, 70.0],
+  [85.0, 85.0, 95.0, 95.0],
+  [62.5, 62.5, 90.0, 90.0],
+  [14.375, 14.375, 76.25, 76.25]],
+ &#39;dcoord&#39;: [[0.0, 0.30100000000000005, 0.30100000000000005, 0.0],
+  [0.0, 0.394, 0.394, 0.30100000000000005],
+  [0.0, 0.508, 0.508, 0.394],
+  [0.0, 0.6599999999999999, 0.6599999999999999, 0.508],
+  [0.0, 0.21799999999999997, 0.21799999999999997, 0.0],
+  [0.0, 0.41000000000000003, 0.41000000000000003, 0.21799999999999997],
+  [0.0, 0.508, 0.508, 0.0],
+  [0.41000000000000003, 0.6599999999999999, 0.6599999999999999, 0.508],
+  [0.6599999999999999, 0.791, 0.791, 0.6599999999999999]],
+ &#39;ivl&#39;: [&#39;3&#39;, &#39;1&#39;, &#39;6&#39;, &#39;5&#39;, &#39;7&#39;, &#39;4&#39;, &#39;0&#39;, &#39;2&#39;, &#39;8&#39;, &#39;9&#39;],
+ &#39;leaves&#39;: [3, 1, 6, 5, 7, 4, 0, 2, 8, 9],
+ &#39;color_list&#39;: [&#39;C1&#39;, &#39;C1&#39;, &#39;C1&#39;, &#39;C0&#39;, &#39;C2&#39;, &#39;C2&#39;, &#39;C3&#39;, &#39;C0&#39;, &#39;C0&#39;],
+ &#39;leaves_color_list&#39;: [&#39;C0&#39;,
+  &#39;C1&#39;,
+  &#39;C1&#39;,
+  &#39;C1&#39;,
+  &#39;C1&#39;,
+  &#39;C2&#39;,
+  &#39;C2&#39;,
+  &#39;C2&#39;,
+  &#39;C3&#39;,
+  &#39;C3&#39;]}
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_intNMF_example_57_1.png" src="../_images/notebooks_intNMF_example_57_1.png" />
+</div>
+</div>
+<p>Threshold is a horizontal line on the above graph</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[285]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clusterize the data</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">fcluster</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">)</span>
+
+<span class="c1"># Show the cluster</span>
+<span class="n">labels</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[285]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([4, 2, 4, 3, 4, 1, 1, 1, 5, 6], dtype=int32)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example_nmf.html" class="btn btn-neutral float-right" title="intNMF examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, william morgans.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nmf_models.nmf_models_mod_updates.intNMF &mdash; sc_intNMF 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nmf_models.nmf_models_mod_updates.InvalidMatType" href="nmf_models.nmf_models_mod_updates.InvalidMatType.html" />
+    <link rel="prev" title="nmf_models.nmf_models_mod_updates.log_tf_idf" href="nmf_models.nmf_models_mod_updates.log_tf_idf.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sc_intNMF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Jupyter Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="nmf_models.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.html">nmf_models.nmf_models_mod_updates</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.log_tf_idf.html">nmf_models.nmf_models_mod_updates.log_tf_idf</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">nmf_models.nmf_models_mod_updates.intNMF</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nmf_models.nmf_models_mod_updates.intNMF"><code class="docutils literal notranslate"><span class="pre">intNMF</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.InvalidMatType.html">nmf_models.nmf_models_mod_updates.InvalidMatType</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sc_intNMF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="nmf_models.html">nmf_models</a></li>
+          <li class="breadcrumb-item"><a href="nmf_models.nmf_models_mod_updates.html">nmf_models.nmf_models_mod_updates</a></li>
+      <li class="breadcrumb-item active">nmf_models.nmf_models_mod_updates.intNMF</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="nmf-models-nmf-models-mod-updates-intnmf">
+<h1>nmf_models.nmf_models_mod_updates.intNMF<a class="headerlink" href="#nmf-models-nmf-models-mod-updates-intnmf" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intNMF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_topics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mod1_skew</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nmf_models/nmf_models_mod_updates.html#intNMF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Class to run int NMF on multiome data</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.theta">
+<span class="sig-name descname"><span class="pre">theta</span></span><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.theta" title="Permalink to this definition"></a></dt>
+<dd><p>cell x topic matrix (joint low dimensional embedding)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.phi_rna">
+<span class="sig-name descname"><span class="pre">phi_rna</span></span><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.phi_rna" title="Permalink to this definition"></a></dt>
+<dd><p>topic x gene matrix. Gives the loading matrix to define topics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.phi_atac">
+<span class="sig-name descname"><span class="pre">phi_atac</span></span><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.phi_atac" title="Permalink to this definition"></a></dt>
+<dd><p>topic x region matrix. Gives the loading matrix to define topics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.loss" title="Permalink to this definition"></a></dt>
+<dd><p>l2 norm of the reconstruction error i.e. ||X_rna - WH_rna||_2 + ||X_atac - WH_atac||_2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.loss_atac">
+<span class="sig-name descname"><span class="pre">loss_atac</span></span><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.loss_atac" title="Permalink to this definition"></a></dt>
+<dd><p>l2 norm for the reconstruction error of just the atac matrix i.e. ||X_atac - WH_atac||_2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.loss_rna">
+<span class="sig-name descname"><span class="pre">loss_rna</span></span><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.loss_rna" title="Permalink to this definition"></a></dt>
+<dd><p>l2 norm for the reconstruction error of just the rna matrix i.e. ||X_rna - WH_rna||_2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_topics</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of latent topics</p></li>
+<li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of interations during optimisation.  Defaults to 15.</p></li>
+<li><p><strong>init</strong> (<em>string</em>) – Method of initialising W and H. Defaults to random.</p></li>
+<li><p><strong>mod1_skew</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Relative weighting of two modalities between 0-1. Defaults to 0.5.</p></li>
+<li><p><strong>reg</strong> (<em>string</em>) – Include l1 or l2 regularisation or not. (This is TODO). Default None</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Random seed to use. Defaults to None ,i.e., no control of random seed (Useful for reproducability when using random initilisation)</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nmf_models.nmf_models_mod_updates.intNMF.fit" title="nmf_models.nmf_models_mod_updates.intNMF.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a></p></td>
+<td><p>Optimise NMF.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="nmf_models.nmf_models_mod_updates.intNMF.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rna_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atac_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rna_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atac_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nmf_models/nmf_models_mod_updates.html#intNMF.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nmf_models.nmf_models_mod_updates.intNMF.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Optimise NMF.</p>
+<p>Uses accelerated Hierarchical alternating least squares algorithm proposed here, but modified to
+joint factorise two matrices. <a class="reference external" href="https://arxiv.org/pdf/1107.5194.pdf">https://arxiv.org/pdf/1107.5194.pdf</a>. Only required arguments are the matrices to use for factorisation.
+GEX and ATAC matrices are expected in cell by feature format. Matrices should be scipy sparse matrices.
+min ||X_rna - (theta . phi_rna)||_2 and min ||X_atac - (theta . phi_atac)||_2 s.t. theta, phi_rna, phi_atac &gt; 0. So that theta hold the latent topic scores for a cell. And phi
+the allows recontruction of X</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rna_mat</strong> (<em>scipy sparse matrix</em><em> (or </em><em>coercible</em><em>) of </em><em>single cell gene expression</em>) – </p></li>
+<li><p><strong>atac_mat</strong> (<em>scipy sparse matrix</em><em> (or </em><em>coercible</em><em>) of </em><em>single cell gene expression</em>) – </p></li>
+<li><p><strong>rna_names</strong> (<em>Optional list</em><em> of </em><em>gene names must be same length as columns in rna_mat</em>) – </p></li>
+<li><p><strong>atac_names</strong> (<em>Optional list. Must be the same length as columns in atac_mat</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Access low dim embed with self.theta or the loadings with self.phi_rna or self.phi_atac</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nmf_models.nmf_models_mod_updates.log_tf_idf.html" class="btn btn-neutral float-left" title="nmf_models.nmf_models_mod_updates.log_tf_idf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nmf_models.nmf_models_mod_updates.InvalidMatType.html" class="btn btn-neutral float-right" title="nmf_models.nmf_models_mod_updates.InvalidMatType" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, william morgans.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

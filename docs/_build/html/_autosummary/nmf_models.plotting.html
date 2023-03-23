@@ -11,15 +11,16 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="README" href="../readme.html" />
+    <link rel="next" title="nmf_models.plotting.correlation_embed" href="nmf_models.plotting.correlation_embed.html" />
     <link rel="prev" title="nmf_models.nmf_models_mod_updates.InvalidMatType" href="nmf_models.nmf_models_mod_updates.InvalidMatType.html" /> 
 </head>
 
@@ -48,7 +49,22 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Jupyter Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="nmf_models.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="nmf_models.nmf_models_mod_updates.html">nmf_models.nmf_models_mod_updates</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">nmf_models.plotting</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">nmf_models.plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.correlation_embed.html">nmf_models.plotting.correlation_embed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.correlation_loadings.html">nmf_models.plotting.correlation_loadings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.correlation_plot.html">nmf_models.plotting.correlation_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.embed_plot.html">nmf_models.plotting.embed_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.factor_biplot.html">nmf_models.plotting.factor_biplot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.loss.html">nmf_models.plotting.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.plot_weights_bar.html">nmf_models.plotting.plot_weights_bar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.plot_weights_rank.html">nmf_models.plotting.plot_weights_rank</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.plot_weights_scatter.html">nmf_models.plotting.plot_weights_scatter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.view_embed.html">nmf_models.plotting.view_embed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.view_loadings.html">nmf_models.plotting.view_loadings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmf_models.plotting.SeabornFig2Grid.html">nmf_models.plotting.SeabornFig2Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nmf_models.utils.html">nmf_models.utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
@@ -104,6 +120,53 @@
 </style>
 <section id="module-nmf_models.plotting">
 <span id="nmf-models-plotting"></span><h1>nmf_models.plotting<a class="headerlink" href="#module-nmf_models.plotting" title="Permalink to this heading"></a></h1>
+<p>Plotting functions for intNMF.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.correlation_embed.html#nmf_models.plotting.correlation_embed" title="nmf_models.plotting.correlation_embed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlation_embed</span></code></a></p></td>
+<td><p>view matrix correlation of intNMF embedding</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nmf_models.plotting.correlation_loadings.html#nmf_models.plotting.correlation_loadings" title="nmf_models.plotting.correlation_loadings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlation_loadings</span></code></a></p></td>
+<td><p>view matrix correlation of intNMF loadings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.correlation_plot.html#nmf_models.plotting.correlation_plot" title="nmf_models.plotting.correlation_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlation_plot</span></code></a></p></td>
+<td><p>view matrix correlation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nmf_models.plotting.embed_plot.html#nmf_models.plotting.embed_plot" title="nmf_models.plotting.embed_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">embed_plot</span></code></a></p></td>
+<td><p>Plot nmf embedding.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.factor_biplot.html#nmf_models.plotting.factor_biplot" title="nmf_models.plotting.factor_biplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">factor_biplot</span></code></a></p></td>
+<td><p>Plot nmf embedding.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nmf_models.plotting.loss.html#nmf_models.plotting.loss" title="nmf_models.plotting.loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loss</span></code></a></p></td>
+<td><p>View loss.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.plot_weights_bar.html#nmf_models.plotting.plot_weights_bar" title="nmf_models.plotting.plot_weights_bar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_weights_bar</span></code></a></p></td>
+<td><p>Plot stacked bar chart.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nmf_models.plotting.plot_weights_rank.html#nmf_models.plotting.plot_weights_rank" title="nmf_models.plotting.plot_weights_rank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_weights_rank</span></code></a></p></td>
+<td><p>Rank plot of the feature weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.plot_weights_scatter.html#nmf_models.plotting.plot_weights_scatter" title="nmf_models.plotting.plot_weights_scatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_weights_scatter</span></code></a></p></td>
+<td><p>Rank plot of the feature weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nmf_models.plotting.view_embed.html#nmf_models.plotting.view_embed" title="nmf_models.plotting.view_embed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_embed</span></code></a></p></td>
+<td><p>View the joint embeding matrix of an intNMF object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.view_loadings.html#nmf_models.plotting.view_loadings" title="nmf_models.plotting.view_loadings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_loadings</span></code></a></p></td>
+<td><p>View loadings matrix.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="nmf_models.plotting.SeabornFig2Grid.html#nmf_models.plotting.SeabornFig2Grid" title="nmf_models.plotting.SeabornFig2Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeabornFig2Grid</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -111,7 +174,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="nmf_models.nmf_models_mod_updates.InvalidMatType.html" class="btn btn-neutral float-left" title="nmf_models.nmf_models_mod_updates.InvalidMatType" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../readme.html" class="btn btn-neutral float-right" title="README" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="nmf_models.plotting.correlation_embed.html" class="btn btn-neutral float-right" title="nmf_models.plotting.correlation_embed" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

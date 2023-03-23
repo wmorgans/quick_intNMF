@@ -27,4 +27,5 @@
 
    nmf_models.nmf_models_mod_updates
    nmf_models.plotting
+   nmf_models.utils
 
