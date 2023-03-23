@@ -25,6 +25,7 @@ nmf\_models.nmf\_models\_mod\_updates
 
    .. autosummary::
       :toctree:
+      :template: custom-class-template.rst
       :nosignatures:
    
       intNMF

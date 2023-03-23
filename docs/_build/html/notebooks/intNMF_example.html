@@ -907,30 +907,68 @@ array([[2.11512070e-16, 2.11512070e-16, 2.11512070e-16, ...,
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[302]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diff_top</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;diff top&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">abs_top</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;abs top&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">{0:f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">))])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1
+56506
+[&#39;1.000000&#39;, &#39;254.000000&#39;, &#39;380.000000&#39;, &#39;463.000000&#39;, &#39;572.000000&#39;, &#39;749.000000&#39;, &#39;1030.000000&#39;, &#39;1544.000000&#39;, &#39;2556.000000&#39;, &#39;56506.000000&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[292]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[292]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+56506
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[286]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">diff_top</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;diff top&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">abs_top</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;abs top&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[286]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x2b05fe074190&gt;
+&lt;matplotlib.legend.Legend at 0x2b0656d4be20&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_37_1.png" src="../_images/notebooks_intNMF_example_37_1.png" />
+<img alt="../_images/notebooks_intNMF_example_39_1.png" src="../_images/notebooks_intNMF_example_39_1.png" />
 </div>
 </div>
 </section>
@@ -958,7 +996,7 @@ array([[2.11512070e-16, 2.11512070e-16, 2.11512070e-16, ...,
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_39_1.png" src="../_images/notebooks_intNMF_example_39_1.png" />
+<img alt="../_images/notebooks_intNMF_example_41_1.png" src="../_images/notebooks_intNMF_example_41_1.png" />
 </div>
 </div>
 <p>Plot the top features for all topics. You can also annotate plots with user chosen features</p>
@@ -1011,7 +1049,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_42_1.png" src="../_images/notebooks_intNMF_example_42_1.png" />
+<img alt="../_images/notebooks_intNMF_example_44_1.png" src="../_images/notebooks_intNMF_example_44_1.png" />
 </div>
 </div>
 <p>The functions also work for atac features</p>
@@ -1029,7 +1067,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_44_0.png" src="../_images/notebooks_intNMF_example_44_0.png" />
+<img alt="../_images/notebooks_intNMF_example_46_0.png" src="../_images/notebooks_intNMF_example_46_0.png" />
 </div>
 </div>
 </section>
@@ -1057,7 +1095,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_46_1.png" src="../_images/notebooks_intNMF_example_46_1.png" />
+<img alt="../_images/notebooks_intNMF_example_48_1.png" src="../_images/notebooks_intNMF_example_48_1.png" />
 </div>
 </div>
 </section>
@@ -1127,7 +1165,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_51_1.png" src="../_images/notebooks_intNMF_example_51_1.png" />
+<img alt="../_images/notebooks_intNMF_example_53_1.png" src="../_images/notebooks_intNMF_example_53_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1151,7 +1189,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_52_1.png" src="../_images/notebooks_intNMF_example_52_1.png" />
+<img alt="../_images/notebooks_intNMF_example_54_1.png" src="../_images/notebooks_intNMF_example_54_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1175,7 +1213,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_53_1.png" src="../_images/notebooks_intNMF_example_53_1.png" />
+<img alt="../_images/notebooks_intNMF_example_55_1.png" src="../_images/notebooks_intNMF_example_55_1.png" />
 </div>
 </div>
 <p>We can also plot the loss of the nmf_model for each epoch during training (this is just qc). The loss should monotonically decrease.</p>
@@ -1191,7 +1229,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_55_0.png" src="../_images/notebooks_intNMF_example_55_0.png" />
+<img alt="../_images/notebooks_intNMF_example_57_0.png" src="../_images/notebooks_intNMF_example_57_0.png" />
 </div>
 </div>
 <p>Finally any of nmf_model.theta, nmf_model.phi_rna and nmf_model.phi_atac can be clustered. For example hierarchical clustering of the phi_rna matrix. Groups topics based on similarity of the feature weights. Clustering featrues takes longer as there are many more features than topic/factor.</p>
@@ -1256,7 +1294,7 @@ adding genes
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_intNMF_example_57_1.png" src="../_images/notebooks_intNMF_example_57_1.png" />
+<img alt="../_images/notebooks_intNMF_example_59_1.png" src="../_images/notebooks_intNMF_example_59_1.png" />
 </div>
 </div>
 <p>Threshold is a horizontal line on the above graph</p>

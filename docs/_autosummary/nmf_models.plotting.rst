@@ -35,6 +35,7 @@ nmf\_models.plotting
 
    .. autosummary::
       :toctree:
+      :template: custom-class-template.rst
       :nosignatures:
    
       SeabornFig2Grid

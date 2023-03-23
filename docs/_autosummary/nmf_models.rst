@@ -23,6 +23,7 @@
 
 .. autosummary::
    :toctree:
+   :template: custom-module-template.rst
    :recursive:
 
    nmf_models.nmf_models_mod_updates

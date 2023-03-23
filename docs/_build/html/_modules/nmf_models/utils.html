@@ -73,7 +73,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for nmf_models.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;Module containing useful functions for intNMF module.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">nmf_models.nmf_models_mod_updates</span> <span class="kn">import</span> <span class="n">intNMF</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Mapping</span>  <span class="c1"># Special</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -86,7 +88,7 @@
                      <span class="n">n_features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                      <span class="n">modality</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;rna&#39;</span><span class="p">,</span>
                      <span class="n">mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;abs&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Get the highest ranked features from selected topics.</span>
+    <span class="sd">&quot;&quot;&quot;Get the highest ranked features from selected topics.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -103,7 +105,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list[str] of features from selected modality</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 
@@ -136,7 +138,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">topic_features</span> <span class="ow">in</span> <span class="n">top_features</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">topic_features</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="load_multiome"><a class="viewcode-back" href="../../_autosummary/nmf_models.utils.load_multiome.html#nmf_models.utils.load_multiome">[docs]</a><span class="k">def</span> <span class="nf">load_multiome</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Function to load multiome data from .h5, .h5ad or .h5mu file types</span>
+    <span class="sd">&quot;&quot;&quot;Function to load multiome data from .h5, .h5ad or .h5mu file types</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -148,7 +150,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    muon.MuData object multimodal data contanainer built on anndata</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.h5&#39;</span><span class="p">:</span>
