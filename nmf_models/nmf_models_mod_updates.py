@@ -1,6 +1,4 @@
-"""
-Module containing the inNMF class and tf-idf function
-"""
+"""Module containing the inNMF class and tf-idf function."""
 
 import numpy as np
 import sklearn
@@ -66,7 +64,7 @@ class intNMF():
         self.epoch_iter = []
         self.rand = seed
         self.rna_features = None
-        self.atac_features = None 
+        self.atac_features = None
 
     def _add_feature_names(self, rna_names: List[str], atac_names: Optional[List[str]] = None):
         """
@@ -80,7 +78,7 @@ class intNMF():
         if len(rna_names) != self.phi_rna.shape[1]:
             print('rna dims dont match. Features not added')
             return
-        self.rna_features = rna_names 
+        self.rna_features = rna_names
 
         if atac_names is not None:
             if len(atac_names) != self.phi_atac.shape[1]:

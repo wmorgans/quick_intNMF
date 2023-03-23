@@ -1,13 +1,12 @@
-"""Plotting functions for intNMF.
-"""
+"""Plotting functions for intNMF."""
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 import numpy as np
-from nmf_models_mod_updates import intNMF
+from nmf_models.nmf_models_mod_updates import intNMF
 from typing import Optional, Union, Mapping  # Special
 import seaborn as sns
 import matplotlib as mpl
-from utils import SeabornFig2Grid as sfg
 import sys
 import pandas as pd
 
@@ -98,7 +97,7 @@ def view_loadings(nmf_model: intNMF,
         Returns
         -------
         matplotlib axes
-            axes for figure. if bodality == 'both' list of axes is returned
+            axes for figure. if modality == 'both' list of axes is returned
     """
 
     if modality == "both":
@@ -114,27 +113,24 @@ def view_loadings(nmf_model: intNMF,
 
             cb = fig.colorbar(im2, cax=cax)
             ax = [ax1, ax2]
+            fig.tight_layout()
         else:
-
             g0 = sns.clustermap(nmf_model.phi_rna, vmin=0, vmax=1,
                                 xticklabels='None')
+            g0.fig.suptitle('RNA')
+
             # create new gridspec for the right part
             g1 = sns.clustermap(nmf_model.phi_atac, vmin=0, vmax=1,
                                 xticklabels='None')
-
-            fig = plt.figure(figsize=(15, 8))
-            gs = mpl.gridspec.GridSpec(1, 1)
-
-            mg0 = sfg.SeabornFig2Grid(g0, fig, gs[0])
-            mg1 = sfg.SeabornFig2Grid(g1, fig, gs[1])
-
-            gs.tight_layout(fig)
+            g1.fig.suptitle('ATAC')
+            ax = [g0, g1]
 
     elif modality == "atac":
         if not clustered:
             fig, ax = plt.subplots()
             im, ax = _view_mat(nmf_model.phi_atac, 'regions', ax, 'topics')
             fig.colorbar(im, ax=ax)
+            fig.tight_layout()
         else:
             ax = sns.clustermap(nmf_model.phi_atac, method="complete", vmin=0, vmax=1,
                             yticklabels='None')
@@ -144,10 +140,11 @@ def view_loadings(nmf_model: intNMF,
             fig, ax = plt.subplots()
             im, ax = _view_mat(nmf_model.phi_rna, 'genes', ax, 'topics')
             fig.colorbar(im, ax=ax)
+            fig.tight_layout()
         else:
-            ax = sns.clustermap(nmf_model.theta, method="complete", vmin=0, vmax=1,
+            ax = sns.clustermap(nmf_model.phi_rna, method="complete", vmin=0, vmax=1,
                             yticklabels='None')
-    fig.tight_layout()
+
 
     return ax
 
@@ -155,14 +152,14 @@ def view_loadings(nmf_model: intNMF,
 def loss(nmf_model: intNMF,
          modality: Optional[str] = 'both'):
     """View loss.
-    
+
         Parameters
         ---------
         nmf_model: intNMF
             intNMF model with loss to plot
         modality: str, 'both' | 'rna' | 'atac'
             plot combined or modality specific loss. Default combined
-        
+
         Returns
         ------
         matplotlib ax
@@ -183,26 +180,115 @@ def loss(nmf_model: intNMF,
 
     return ax
 
-# TODO add correlation plots from phi and theta matrices.
 
-
-def correlation_plot(cor_mat):
+def correlation_plot(cor_mat, clustered: Optional[bool] = False, ax=None):
     """view matrix correlation
-    
+
         Parameters
         ----------
         cor_mat : array-lile
             correlation matrix to plot
-        
+        clustered : bool
+            heatmap or clustermap
+        ax : matplotlib Axes, default None
+            matplotlib ax to plot on.
         Returns
         -------
-        matplotlib ax
+        matplotlib ax if clustered False and seaborn clustergrid if clustered True
     """
-    ax = sns.heatmap(cor_mat, cmap='RdBu', annot=True,
-                annot_kws={"size": 7}, vmin=-1, vmax=1)
+    if not clustered:
+        if ax is not None:
+            ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=True,
+                           annot_kws={"size": 7}, vmin=-1, vmax=1, ax=ax)
+        else:
+            ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=True,
+                            annot_kws={"size": 7}, vmin=-1, vmax=1)
+    else:
+        ax = sns.clustermap(cor_mat, method="complete", cmap='RdBu_r', annot=True,
+                            annot_kws={"size": 7}, vmin=-1, vmax=1)
     return ax
-#def correlation_embed(nmf)
 
+def correlation_embed(nmf_model: intNMF, clustered: Optional[bool] = False):
+    """view matrix correlation of intNMF embedding
+
+        Parameters
+        ----------
+        nmf_model : intNMF
+            intNMF model with embed to compare correlations for. (.fit() has been called)
+        clustered : bool
+            heatmap or clustermap
+        Returns
+        -------
+        matplotlib ax if clustered False and seaborn clustergrid if clustered True
+    """
+    ax = correlation_plot(np.round(np.corrcoef(nmf_model.theta.T), 2), clustered)
+    return ax
+
+def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both', clustered: Optional[bool]=False):
+    """view matrix correlation of intNMF loadings
+
+        Parameters
+        ----------
+        nmf_model : intNMF
+            intNMF model with loadings to compare correlations for. (.fit() has been called)
+        modality : str, 'both' | 'rna' | 'atac
+            modality to plot loading for. Default both
+        clustered : bool
+            heatmap or clustermap
+        Returns
+        -------
+        matplotlib axes or list of matplotlib axis or seraborn clustergrid or seaborn Gridspec
+            Axes for figure. If clustered = False - matplotlib objects used otherwise seaborn objects used.
+            If modality = 'both' list of axes is returned if matplotlib and Gridspec if seaborn.
+    """
+    rna_cor = np.round(np.corrcoef(nmf_model.phi_rna), 2)
+    atac_cor = np.round(np.corrcoef(nmf_model.phi_atac), 2)
+
+    if modality == "both":
+
+        if not clustered:
+            fig, axs = plt.subplots(nrows=1, ncols=2)
+
+            axs[0] = correlation_plot(rna_cor, clustered, axs[0])
+            axs[0].set_title('RNA')
+            axs[1] = correlation_plot(atac_cor, clustered, axs[1])
+            axs[1].set_title('ATAC')
+
+            ax = axs
+            fig.tight_layout()
+        else:
+
+            g0 = sns.clustermap(rna_cor, method="complete", cmap='RdBu_r', annot=True,
+                                annot_kws={"size": 7}, vmin=-1, vmax=1)
+            g0.fig.suptitle('RNA')
+            # create new gridspec for the right part
+            g1 = sns.clustermap(atac_cor, method="complete", cmap='RdBu_r', annot=True,
+                                annot_kws={"size": 7}, vmin=-1, vmax=1)
+            g1.fig.suptitle('ATAC')
+            ax = [g0, g1]
+
+    elif modality == "atac":
+        if not clustered:
+            fig, ax = plt.subplots()
+            ax = correlation_plot(atac_cor, clustered)
+            ax.set_title('ATAC loading correlation')
+            fig.tight_layout()
+        else:
+            ax = sns.clustermap(atac_cor, method="complete", cmap='RdBu_r', annot=True,
+                                annot_kws={"size": 7}, vmin=-1, vmax=1)
+            ax.fig.suptitle('ATAC loading correlation')
+    elif modality == "rna":
+        if not clustered:
+            fig, ax = plt.subplots()
+            ax = correlation_plot(rna_cor, clustered)
+            ax.set_title('RNA loading correlation')
+            fig.tight_layout()
+        else:
+            ax = sns.clustermap(rna_cor, method="complete", cmap='RdBu_r', annot=True,
+                                annot_kws={"size": 7}, vmin=-1, vmax=1)
+            ax.fig.suptitle('RNA loading correlation')
+
+    return ax
 
 def embed_plot(nmf_model: intNMF,
                TX: Optional[int] = 0,
@@ -220,7 +306,7 @@ def embed_plot(nmf_model: intNMF,
         nmf_model : intNMF
             intNMF model with embed to view (.fit has been run)
         TX : int
-            factor/topic for x-axis
+            factor/topic for x-axishttp://localhost:8888
         TY : int
             factor/topic for y-axis
         labs : list
@@ -242,8 +328,6 @@ def embed_plot(nmf_model: intNMF,
     """
 
     fig, ax = plt.subplots()
-    fig.tight_layout()
-    print(len(np.unique(labs))/len(labs) > 0.05)
     if labs is not None:
         # treat labs as continous
         if len(np.unique(labs))/len(labs) > 0.05:
@@ -277,7 +361,8 @@ def embed_plot(nmf_model: intNMF,
     if title is not None:
         ax.set_title(title)
 
-    plt.tight_layout()
+    fig.tight_layout()
+
     return ax
 
 
@@ -287,10 +372,11 @@ def factor_biplot(nmf_model: intNMF,
                   n_labs: Optional[int] = 5,
                   modality: Optional[str] = 'rna',
                   labs: Optional[list] = None,
-                  select: Optional[str] = None,
+                  select: Optional[list] = None,
                   title: Optional[str] = None,
                   x_lab: Optional[str] = None,
-                  y_lab: Optional[str] = None):
+                  y_lab: Optional[str] = None,
+                  mode: Optional[str] = 'abs'):
     """Plot nmf embedding. With features projected on. Plot is scaled so that the projected features don't exceed 1.
 
         Parameters
@@ -307,16 +393,20 @@ def factor_biplot(nmf_model: intNMF,
             select modality from which features are projected from.
         labs : list
             cell labels used to colour plot. Discrete or continuos determined by fraction of unique elements
+        select : list
+            list of features to project
         title : str
             plot title, default None
         y_lab : str
             y-axis label, default None
         x_lab : str
             x-axis label, default None
-
+        mode : str, 'abs' | 'diff'
+            select features to plot by absolute value or by difference
         Returns
         -------
         matplotlib ax
+        list of features annotated
     """
 
     scale_x_embed = 1.0/nmf_model.theta[:, TX].max()
@@ -341,10 +431,22 @@ def factor_biplot(nmf_model: intNMF,
 
     phi_df = pd.DataFrame(phi, columns=col_names, index=['Topic' + str(i) for i in np.arange(nmf_model.k)])
 
-    top_features_TX = phi_df.iloc[TX, :].sort_values(ascending=False)[0:n_labs]
-    top_features_TY = phi_df.iloc[TY, :].sort_values(ascending=False)[0:n_labs]
+    if mode == 'abs':
+
+        top_features_TX = phi_df.iloc[TX, :].sort_values(ascending=False)[0:n_labs]
+        top_features_TY = phi_df.iloc[TY, :].sort_values(ascending=False)[0:n_labs]
+
+    elif mode == 'diff':
+        feature_diff = (phi_df.iloc[TX, :] - phi_df.iloc[TY, :]).sort_values(ascending=False)
+        top_features_TX = feature_diff[0:n_labs]
+        top_features_TY = feature_diff[-n_labs:]
+
+    else:
+        print('wrong mode selection')
+        return
 
     features_to_add = np.append(top_features_TX.index.values, top_features_TY.index.values)
+
 
     if select is not None and set(select).issubset(phi_df.columns):
         features_to_add = np.append(features_to_add, select)
@@ -362,7 +464,7 @@ def factor_biplot(nmf_model: intNMF,
 
     plt.tight_layout()
 
-    return ax
+    return ax, features_to_add
 
 
 def plot_weights_rank(nmf_model: intNMF,
@@ -370,7 +472,8 @@ def plot_weights_rank(nmf_model: intNMF,
                       n_labs: Optional[int] = 5,
                       modality: Optional[str] = 'rna',
                       select: Optional[list] = None,
-                      title: Optional[str] = None):
+                      title: Optional[str] = None,
+                      ax = None):
     """Rank plot of the feature weights.
 
         Parameters
@@ -378,7 +481,7 @@ def plot_weights_rank(nmf_model: intNMF,
         nmf_model : intNMF
             intNMF model with loadings to rank (.fit has been run)
         factor : int
-            factor/topic to plot feature weights for        
+            factor/topic to plot feature weights for
         n_labs: int
             number of features to label
         modality: str, 'rna' | 'atac'
@@ -387,6 +490,8 @@ def plot_weights_rank(nmf_model: intNMF,
             list of additional features to label
         title : str
             plot title, default None
+        ax : matplotlib ax
+            matplotlib ax to plot on
 
         Returns
         -------
@@ -411,7 +516,8 @@ def plot_weights_rank(nmf_model: intNMF,
     # Plot ranks
     ranks = phi_df.iloc[factor, :].sort_values(ascending=False)
 
-    fig, ax = plt.subplots()
+    if ax is None:
+        fig, ax = plt.subplots()
     ax.scatter(np.arange(len(ranks)), ranks)
 
     # Plot annotations of top ranked genes and named ranks
@@ -421,8 +527,10 @@ def plot_weights_rank(nmf_model: intNMF,
     top_N = ranks_df.iloc[0:n_labs, :]
 
     if select is not None and set(select).issubset(phi_df.columns):
+        print('adding genes')
         genes_to_add = ranks_df.loc[select, :]
         top_N = pd.concat([top_N, genes_to_add])
+
 
     jitter = np.linspace(0.1, -1, num=len(top_N))
     for i, (index, row) in enumerate(top_N.iterrows()):
@@ -450,7 +558,7 @@ def plot_weights_scatter(nmf_model: intNMF,
         nmf_model : intNMF
             intNMF model with loadings to plot (.fit has been run)
         factors : tuple(int, int)
-            factor/topics to plot feature weights for        
+            factor/topics to plot feature weights for
         n_labs: int
             number of features to label per topic/factor
         modality: str, 'rna' | 'atac'
@@ -521,7 +629,7 @@ def plot_weights_bar(nmf_model: intNMF,
         genes : list[str]
             list of features whose weights are plooted. (used to determine the number of bars)
         factors : list[int]
-            factor/topics to plot feature weights. (used to color sections of the bar)        
+            factor/topics to plot feature weights. (used to color sections of the bar)
         modality: str, 'rna' | 'atac'
             select modality from which features are plotted.
         title : str
@@ -551,13 +659,13 @@ def plot_weights_bar(nmf_model: intNMF,
     if not set(genes).issubset(phi_df.columns):
         print('features given not in features')
         return
-        
+
     if factors is None:
         factors = np.arange(nmf_model.k)
-        
+
     plot_df = phi_df.loc[phi_df.index[factors], genes]
     if plot_df.shape[0] > 10:
-        lab_cmap = dict((val, mpl.colormaps['rainbow'](i/plot_df.shape[0])) for i, val in enumerate(plot_df.index))
+        lab_cmap = dict((val, mpl.colormaps['rainbow'](i/plot_df.nmf_models.nmf_modelsshape[0])) for i, val in enumerate(plot_df.index))
     else:
         lab_cmap = dict((val, plt.get_cmap('tab10')(i)) for i, val in enumerate(plot_df.index))
     fig, ax = plt.subplots()
