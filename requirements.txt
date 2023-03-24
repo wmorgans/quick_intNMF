@@ -1,4 +1,8 @@
-scipy
-scikit-sklearn
-numpy
 matplotlib
+numpy
+scipy
+scikit-learn
+matplotlib
+seaborn
+pandas
+muon
