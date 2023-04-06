@@ -1,7 +1,7 @@
 """Module containing useful functions for intNMF module."""
 
 import numpy as np
-from nmf_models.nmf_models_mod_updates import intNMF
+from nmf_models_mod_updates import intNMF
 from typing import Optional, Union, Mapping  # Special
 import pandas as pd
 import muon as mu

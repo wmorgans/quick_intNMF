@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 import numpy as np
-from nmf_models.nmf_models_mod_updates import intNMF
+from nmf_models_mod_updates import intNMF
 from typing import Optional, Union, Mapping  # Special
 import seaborn as sns
 import matplotlib as mpl
