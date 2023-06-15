@@ -71,6 +71,8 @@ def view_embed(nmf_model: intNMF,
     if not clustered:
         fig, ax = plt.subplots()
         im, ax = _view_mat(nmf_model.theta, 'topics', ax, 'cells')
+        ax.set_yticks(np.arange(-.5, nmf_model.k-1, 1))
+        ax.set_yticklabels(np.arange(0, nmf_model.k, 1))
         fig.colorbar(im)
         fig.tight_layout()
     else:
@@ -108,6 +110,12 @@ def view_loadings(nmf_model: intNMF,
 
             im1, ax1 = _view_mat(nmf_model.phi_rna, 'genes', grid[0], 'topics')
             im2, ax2 = _view_mat(nmf_model.phi_atac, 'regions', grid[1])
+
+            ax1.set_yticks(np.arange(-.5, nmf_model.k-1, 1))
+            ax1.set_yticklabels(np.arange(0, nmf_model.k, 1))
+
+            ax2.set_yticks(np.arange(-.5, nmf_model.k-1, 1))
+            ax2.set_yticklabels(np.arange(0, nmf_model.k, 1))
 
             cax = grid.cbar_axes[0]
 

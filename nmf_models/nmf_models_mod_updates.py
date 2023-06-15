@@ -178,7 +178,7 @@ class intNMF():
             phi_atac, phi_atac_it = self._HALS(phi_atac, B_atac, A_atac, eit1)
 
             error_rna = np.sqrt(nM_rna - 2*np.sum(phi_rna*A_rna) + np.sum(B_rna*(phi_rna.dot(phi_rna.T))))
-            error_atac =  np.sqrt(nM_atac - 2*np.sum(phi_atac*A_atac) + np.sum(B_atac*(phi_atac.dot(phi_atac.T))))
+            error_atac = np.sqrt(nM_atac - 2*np.sum(phi_atac*A_atac) + np.sum(B_atac*(phi_atac.dot(phi_atac.T))))
 
             epoch_end =time.perf_counter()
 

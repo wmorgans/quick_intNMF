@@ -7,6 +7,9 @@ import pandas as pd
 import muon as mu
 import anndata as ad
 import os
+import pickle as pkl
+from multiprocessing import Pool
+from functools import partial
 
 def get_top_features(nmf_model:intNMF,
                      topics: Optional[list] = None,
@@ -100,3 +103,65 @@ def load_multiome(file: str, labels: Optional[str] = None):
         mu_data.obs = meta
 
     return mu_data
+
+#method to select model from rank in given list
+def do_model_selection(ks: list, rna, atac, method: Optional[str]="bic", cores: Optional[int] = 2):
+
+    sweep_res = {}
+    best_model = [None, 1e20]
+
+    if method == "bic":
+
+        for k in ks:
+            sweep_res[k] = [intNMF(k, epochs=10), None]
+            sweep_res[k][0].fit(rna, atac)
+            
+            n_atac_features = atac.shape[1]
+            n_rna_features = rna.shape[1]
+            n_cells = rna.shape[0]
+
+            sweep_res[k][1] = np.log(np.square(sweep_res[k][0].loss[-1])) + \
+                            k*(n_cells+n_rna_features+n_atac_features)/(n_cells*(n_rna_features+n_atac_features))* \
+                            np.log((n_cells*(n_rna_features+n_atac_features))/(n_cells+n_rna_features+n_atac_features))
+            
+            if sweep_res[k][1] < best_model[1]:
+                best_model = sweep_res[k]
+
+            sweep_res[k] = tuple(sweep_res[k])
+    #  I dont recomend using this - it didnt work well in practice even when multiple nodes are in use.
+    #  unsure but possibly due to multiple processes trying to access the on disk memory simultaneously
+    # elif method == "bic_starmap":
+    #     with Pool(cores) as p:
+    #         res = p.starmap(partial(run_intnmf, rna=rna, atac=atac), ks)
+
+        # for k, r in zip(res):
+        #     sweep_res[k] = r
+        #     if r[1] < best_model[1]:
+        #         best_model = list(r)
+
+            
+    else:
+        print("incorrect selection of sweep method")
+        return
+
+    with open('sweep_res_intNMF.pickle', 'wb') as handle:
+        pkl.dump(sweep_res, handle, protocol=pkl.HIGHEST_PROTOCOL)
+
+
+    return (tuple(best_model), sweep_res)
+
+#method to run int_nmf for starmap parallelisation
+def run_intnmf(k, rna, atac):
+    nmf_model = intNMF(k, epochs = 10)
+    nmf_model.fit(rna, atac)
+    
+    n_atac_features = atac.shape[1]
+    n_rna_features = rna.shape[1]
+    n_cells = rna.shape[0]
+    
+    # log(||X-X_hat||_F^2) + k*(sample+features)/sample*features)*log((sample*features)/(sample+features))
+    bic1 = np.log(np.square(nmf_model.loss[-1])) + \
+       k*(n_cells+n_rna_features+n_atac_features)/(n_cells*(n_rna_features+n_atac_features))* \
+       np.log((n_cells*(n_rna_features+n_atac_features))/(n_cells+n_rna_features+n_atac_features)) 
+
+    return (nmf_model, bic1)
