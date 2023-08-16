@@ -31,27 +31,43 @@ def select_valid_chroms(data, chrom_sizes, ignore=['_', 'M']):
     
     return [d[idxs_keep] for d in data], valid_chroms
 
-def get_feature_locations(nmf_model, k , mode):
+def get_feature_locations(nmf_model, k , mode, interval=None):
     if mode == 'atac':
         chroms_np = np.array([region.split(':')[0] for region in nmf_model.atac_features])
         starts_np = np.array([region.split(':')[1].split('-')[0] for region in nmf_model.atac_features], dtype='int')
         ends_np = np.array([region.split(':')[1].split('-')[1] for region in nmf_model.atac_features], dtype='int')
         scores_np = nmf_model.phi_atac[k, :]
     elif mode == 'rna':
-        chroms_np = np.array([gene.split(':')[0] for gene in nmf_model.rna_features])
-        starts_np = np.array([gene.split(':')[1].split('-')[0] for gene in nmf_model.rna_features], dtype='int')
-        ends_np = np.array([gene.split(':')[1].split('-')[1] for gene in nmf_model.rna_features], dtype='int')
-        scores_np = nmf_model.phi_rna[k, :]
+        if interval is None:
+            print('need to provide gene locations: chr:start-end')
+            assert False
+        
+        idx_keep = []
+        chroms = []
+        starts = []
+        ends = []
+        for i, gene in enumerate(interval):
+            if gene == 'NA':
+                continue
+            idx_keep.append(i)
+            chroms.append(gene.split(':')[0])
+            starts.append(gene.split(':')[1].split('-')[0])
+            ends.append(gene.split(':')[1].split('-')[1])
+            
+        chroms_np = np.array(chroms)
+        starts_np = np.array(starts, dtype='int')
+        ends_np = np.array(ends, dtype='int')
+        scores_np = nmf_model.phi_rna[k, idx_keep]
     else:
         print('select mode from "rna" or "atac"')
         assert False
 
     return [chroms_np, starts_np, ends_np, scores_np]
 
-def make_bigwig(file_name, nmf_model, k, genome_file_loc, mode = 'atac'):
+def make_bigwig(file_name, nmf_model, k, genome_file_loc, mode = 'atac', interval=None):
 
     
-    data = get_feature_locations(nmf_model, k, mode)
+    data = get_feature_locations(nmf_model, k, mode, interval)
 
     chrom_sizes = get_chrom_sizes(genome_file_loc)
 

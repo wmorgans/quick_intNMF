@@ -9,13 +9,14 @@ import seaborn as sns
 import matplotlib as mpl
 import sys
 import pandas as pd
+from kneed import KneeLocator
+from matplotlib.patches import Patch
+
 
 sys.setrecursionlimit(100000)
 
 plt.rcParams["figure.figsize"] = [7.00, 3.50]
 plt.rcParams["figure.autolayout"] = True
-mpl.rc('image', cmap='cividis')
-sns.set_palette(plt.cm.cividis(np.linspace(0, 1, 8))[1:-1])
 
 
 def _view_mat(mat, xlab, ax, ylab=None):
@@ -41,7 +42,6 @@ def _view_mat(mat, xlab, ax, ylab=None):
 
     """
     im_ratio = mat.shape[1]/mat.shape[0]
-    print(im_ratio)
     im = ax.imshow(np.where(mat > 1, 1, mat), aspect=im_ratio,
                    interpolation=None)
     ax.set_xlabel(xlab)
@@ -52,39 +52,91 @@ def _view_mat(mat, xlab, ax, ylab=None):
 
 
 def view_embed(nmf_model: intNMF,
-               clustered: Optional[bool] = False):
+               clustered: Optional[bool] = False,
+               row_labels: Optional[list] = None,
+               fig_size: Optional[tuple] = None,
+               cmap='plasma_r', cbar_pos=(1, .07, .02, .91),
+               legend=True):
     """View the joint embeding matrix of an intNMF object.
 
         Parameters
         ----------
         nmf_model : intNMF
             joint NMF object. With joint embed to plot
-        clustered : boolean
+        clustered : boolean, False
             cluster cells and topics using seaborn clustermap
-
+        row_labels : list, None
+            list of colours representing labels for cells
         Returns
         -------
         matplotlib axes
             axes for figure
     """
 
-    if not clustered:
+
+    if clustered == "max_topic":
+
+        mat = nmf_model.theta/nmf_model.theta.max(axis=0)  # scale to max value of 1
+        max_idx = np.argmax(mat, axis=1)
+        sorted_mat = np.zeros(mat.shape)
+
+        new_idx = []
+
+        for max_col_group in np.unique(max_idx):
+            new_idx.append(np.argwhere(max_idx == max_col_group))
+        
+        new_idx = [int(el) for sublist in new_idx for el in sublist]
+        sorted_mat = mat[new_idx, :]
+        fig, ax = plt.subplots()
+
+        if row_labels is None:
+            ax = sns.clustermap(sorted_mat, vmin=0, vmax=1,
+                    row_cluster=False, col_cluster=False,
+                    yticklabels=False, cbar_pos=cbar_pos,
+                    rasterized=True, cmap=cmap)
+
+        else:
+            tmp_cmap = plt.get_cmap('tab10')
+
+            lab_cmap = dict((val, ["{}".format(val), tmp_cmap(i)]) for i, val in enumerate(pd.unique(row_labels)))
+            u_lab, u_col = map(list, zip(*lab_cmap.values()))
+            row_labels = row_labels[new_idx]
+
+            labels, colours =  map(list, zip(*[lab_cmap[el] for el in row_labels]))
+
+            ax = sns.clustermap(sorted_mat, vmin=0, vmax=1,
+                   row_colors=colours,
+                   row_cluster=False, col_cluster=False,
+                   yticklabels=False, figsize=fig_size,
+                   dendrogram_ratio=(.000000001, .00000001),
+                   rasterized=True, cmap=cmap, cbar_pos=cbar_pos)
+            
+            handles = [Patch(facecolor=u_c) for u_c in u_col]
+            if legend:
+                plt.legend(handles, u_lab, title='Cells',
+                           bbox_to_anchor=(0.5, 1), bbox_transform=plt.gcf().transFigure,
+                           loc='upper center', ncol=3)        
+
+    elif not clustered:
         fig, ax = plt.subplots()
         im, ax = _view_mat(nmf_model.theta, 'topics', ax, 'cells')
         ax.set_yticks(np.arange(-.5, nmf_model.k-1, 1))
         ax.set_yticklabels(np.arange(0, nmf_model.k, 1))
         fig.colorbar(im)
         fig.tight_layout()
-    else:
+
+    elif clustered:
         ax = sns.clustermap(nmf_model.theta, method="complete", vmin=0, vmax=1,
-                            yticklabels='None')
+                            yticklabels='None', row_colors=row_labels)
+
 
     return ax
 
 
 def view_loadings(nmf_model: intNMF,
                   modality: str,
-                  clustered: Optional[bool] = False):
+                  clustered: Optional[bool] = False,
+                  ax: Optional = None):
     """View loadings matrix.
 
         Parameters
@@ -153,8 +205,10 @@ def view_loadings(nmf_model: intNMF,
             ax = sns.clustermap(nmf_model.phi_rna, method="complete", vmin=0, vmax=1,
                             yticklabels='None')
 
-
-    return ax
+    if not clustered:
+        return fig, ax
+    else:
+        return ax
 
 
 def loss(nmf_model: intNMF,
@@ -189,7 +243,7 @@ def loss(nmf_model: intNMF,
     return ax
 
 
-def correlation_plot(cor_mat, clustered: Optional[bool] = False, ax=None):
+def correlation_plot(cor_mat, clustered: Optional[bool] = False, ax=None, figsize=None):
     """view matrix correlation
 
         Parameters
@@ -200,23 +254,25 @@ def correlation_plot(cor_mat, clustered: Optional[bool] = False, ax=None):
             heatmap or clustermap
         ax : matplotlib Axes, default None
             matplotlib ax to plot on.
+        figsize : tuple (width, height). Default None
+            Only has an effect if clustered true
         Returns
         -------
         matplotlib ax if clustered False and seaborn clustergrid if clustered True
     """
     if not clustered:
         if ax is not None:
-            ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=True,
+            ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=False,
                            annot_kws={"size": 7}, vmin=-1, vmax=1, ax=ax)
         else:
-            ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=True,
+            ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=False,
                             annot_kws={"size": 7}, vmin=-1, vmax=1)
     else:
-        ax = sns.clustermap(cor_mat, method="complete", cmap='RdBu_r', annot=True,
-                            annot_kws={"size": 7}, vmin=-1, vmax=1)
+        ax = sns.clustermap(cor_mat, method="complete", cmap='RdBu_r', annot=False,
+                            annot_kws={"size": 7}, vmin=-1, vmax=1, figsize=figsize)
     return ax
 
-def correlation_embed(nmf_model: intNMF, clustered: Optional[bool] = False):
+def correlation_embed(nmf_model: intNMF, clustered: Optional[bool] = False, figsize=None):
     """view matrix correlation of intNMF embedding
 
         Parameters
@@ -225,14 +281,17 @@ def correlation_embed(nmf_model: intNMF, clustered: Optional[bool] = False):
             intNMF model with embed to compare correlations for. (.fit() has been called)
         clustered : bool
             heatmap or clustermap
+        figsize : tuple (width, height). Default None
+            Only has an effect if clustered true
         Returns
         -------
         matplotlib ax if clustered False and seaborn clustergrid if clustered True
     """
-    ax = correlation_plot(np.round(np.corrcoef(nmf_model.theta.T), 2), clustered)
+    ax = correlation_plot(np.round(np.corrcoef(nmf_model.theta.T), 2), clustered, figsize=figsize)
     return ax
 
-def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both', clustered: Optional[bool]=False):
+def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both',
+                         clustered: Optional[bool]=False):
     """view matrix correlation of intNMF loadings
 
         Parameters
@@ -243,6 +302,8 @@ def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both', clus
             modality to plot loading for. Default both
         clustered : bool
             heatmap or clustermap
+        figsize : tuple (width, height). Default None
+            Only has an effect if clustered true
         Returns
         -------
         matplotlib axes or list of matplotlib axis or seraborn clustergrid or seaborn Gridspec
@@ -266,11 +327,11 @@ def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both', clus
             fig.tight_layout()
         else:
 
-            g0 = sns.clustermap(rna_cor, method="complete", cmap='RdBu_r', annot=True,
+            g0 = sns.clustermap(rna_cor, method="complete", cmap='RdBu_r', annot=False,
                                 annot_kws={"size": 7}, vmin=-1, vmax=1)
             g0.fig.suptitle('RNA')
             # create new gridspec for the right part
-            g1 = sns.clustermap(atac_cor, method="complete", cmap='RdBu_r', annot=True,
+            g1 = sns.clustermap(atac_cor, method="complete", cmap='RdBu_r', annot=False,
                                 annot_kws={"size": 7}, vmin=-1, vmax=1)
             g1.fig.suptitle('ATAC')
             ax = [g0, g1]
@@ -282,7 +343,7 @@ def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both', clus
             ax.set_title('ATAC loading correlation')
             fig.tight_layout()
         else:
-            ax = sns.clustermap(atac_cor, method="complete", cmap='RdBu_r', annot=True,
+            ax = sns.clustermap(atac_cor, method="complete", cmap='RdBu_r', annot=False,
                                 annot_kws={"size": 7}, vmin=-1, vmax=1)
             ax.fig.suptitle('ATAC loading correlation')
     elif modality == "rna":
@@ -292,7 +353,7 @@ def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both', clus
             ax.set_title('RNA loading correlation')
             fig.tight_layout()
         else:
-            ax = sns.clustermap(rna_cor, method="complete", cmap='RdBu_r', annot=True,
+            ax = sns.clustermap(rna_cor, method="complete", cmap='RdBu_r', annot=False,
                                 annot_kws={"size": 7}, vmin=-1, vmax=1)
             ax.fig.suptitle('RNA loading correlation')
 
@@ -481,7 +542,9 @@ def plot_weights_rank(nmf_model: intNMF,
                       modality: Optional[str] = 'rna',
                       select: Optional[list] = None,
                       title: Optional[str] = None,
-                      ax = None):
+                      ax = None,
+                      plot_knee: Optional[bool] = False,
+                      mode = 'abs'):
     """Rank plot of the feature weights.
 
         Parameters
@@ -500,6 +563,10 @@ def plot_weights_rank(nmf_model: intNMF,
             plot title, default None
         ax : matplotlib ax
             matplotlib ax to plot on
+        plot_knee : boolean
+            plot inflection point on the graph - can be esued for feature selection
+        mode : str 'abs' | 'diff'
+            plot raw values or difference between topic and average of other topics. defauly 'abs'
 
         Returns
         -------
@@ -519,23 +586,30 @@ def plot_weights_rank(nmf_model: intNMF,
     if col_names is None:
         print('Missing feature labels continuing anyway')
 
-    phi_df = pd.DataFrame(phi, columns=col_names, index=['Factor {}'.format(i) for i in np.arange(nmf_model.k)])
+    phi_df = pd.DataFrame(phi, columns=col_names,
+                          index=['Factor {}'.format(i) for i in np.arange(nmf_model.k)])
 
     # Plot ranks
-    ranks = phi_df.iloc[factor, :].sort_values(ascending=False)
+    if mode == 'abs':
+        ranks = phi_df.iloc[factor, :].sort_values(ascending=False)
+    elif mode == 'diff':
+        ranks = (phi_df.iloc[factor, :] - phi_df.drop(phi_df.index[factor], axis=0).mean(axis=0)).sort_values(ascending=False)
+    else:
+        print('unrecognised arg, default to abs')
+        ranks = phi_df.iloc[factor, :].sort_values(ascending=False)
 
     if ax is None:
         fig, ax = plt.subplots()
     ax.scatter(np.arange(len(ranks)), ranks)
-
     # Plot annotations of top ranked genes and named ranks
     ranks_df = ranks.to_frame()
     ranks_df['rank'] = np.arange(len(ranks_df))
+    ranks_df.columns = ['Factor {}'.format(factor), 'rank']
 
     top_N = ranks_df.iloc[0:n_labs, :]
 
+
     if select is not None and set(select).issubset(phi_df.columns):
-        print('adding genes')
         genes_to_add = ranks_df.loc[select, :]
         top_N = pd.concat([top_N, genes_to_add])
 
@@ -548,6 +622,19 @@ def plot_weights_rank(nmf_model: intNMF,
                     arrowprops=dict(facecolor='black', shrink=0.05, width=0.5, headwidth=1))
     ax.set_xlabel('Feature rank')
     ax.set_ylabel('Factor loading')
+
+    ymin, ymax = ax.get_ylim()
+    xmin, xmax = ax.get_xlim()
+
+
+    if plot_knee:
+        kneedle = KneeLocator(np.arange(len(ranks)), ranks, S=1.0, curve="convex", direction="decreasing")
+        ax.plot([kneedle.knee, kneedle.knee], [ymin, kneedle.knee_y], '--', c='r')
+        ax.plot([xmin, kneedle.knee], [kneedle.knee_y, kneedle.knee_y], '--', c='r')
+
+    ax.set_ylim(ymin, ymax)
+    ax.set_xlim(xmin, xmax)
+        # only one line may be specified; full height
     if title is not None:
         ax.set_title(title)
     return ax
@@ -624,10 +711,74 @@ def plot_weights_scatter(nmf_model: intNMF,
     return ax
 
 def plot_weights_bar(nmf_model: intNMF,
+                 gene: str,
+                 factors: Optional[list] = None,
+                 modality: Optional[str] = 'rna',
+                 title: Optional[str] = None,
+                 ax = None):
+    """Plot stacked bar chart. With features weights plotted per feature and coloured the factor.
+
+        Parameters
+        ----------
+        nmf_model : intNMF
+            intNMF model with loadings to plot (.fit has been run)
+        gene : str
+            single gene/feature to plot topic scores for
+        factors : list[int]
+            factor/topics to plot feature weights. (used as x-axis for bar chart)
+        modality: str, 'rna' | 'atac'
+            select modality from which features are plotted. Default atac
+        title : str
+            plot title, default None
+        ax : matplotlib ax
+            ax to plot on 
+
+        Returns
+        -------
+        matplotlib ax
+    """
+
+
+    if modality == 'rna':
+            phi = nmf_model.phi_rna
+            col_names = nmf_model.rna_features
+    elif modality == 'atac':
+        phi = nmf_model.phi_atac
+        col_names = nmf_model.atac_features
+    else:
+        print('select modality from rna or atac')
+        return
+
+    if col_names is None:
+        print('Missing feature labels continuing anyway')
+
+    phi_df = pd.DataFrame(phi, columns=col_names,
+                            index=['Factor {}'.format(i) for i in np.arange(nmf_model.k)])
+
+    if gene not in phi_df.columns:
+        print('features given not in features')
+        return
+
+    if factors is None:
+        factors = np.arange(nmf_model.k)
+
+    plot_df = phi_df.loc[phi_df.index[factors], gene]
+
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    ax.bar(plot_df.index, plot_df.values)
+    #ax.legend(ncol=2)
+    #ax.tick_params(axis='x', labelrotation=45)
+
+    return ax
+
+def plot_weights_bar_stacked(nmf_model: intNMF,
                      genes: list,
                      factors: Optional[list] = None,
                      modality: Optional[str] = 'rna',
-                     title: Optional[str] = None):
+                     title: Optional[str] = None,
+                     ax = None):
     """Plot stacked bar chart. With features weights plotted per feature and coloured the factor.
 
         Parameters
@@ -642,6 +793,8 @@ def plot_weights_bar(nmf_model: intNMF,
             select modality from which features are plotted.
         title : str
             plot title, default None
+        ax : matplotlib ax
+            ax to plot on
 
         Returns
         -------
@@ -672,11 +825,13 @@ def plot_weights_bar(nmf_model: intNMF,
         factors = np.arange(nmf_model.k)
 
     plot_df = phi_df.loc[phi_df.index[factors], genes]
-    if plot_df.shape[0] > 10:
-        lab_cmap = dict((val, mpl.colormaps['rainbow'](i/plot_df.nmf_models.nmf_modelsshape[0])) for i, val in enumerate(plot_df.index))
+    if plot_df.shape[0] > 20:
+        lab_cmap = dict((val, mpl.colormaps['rainbow'](i/plot_df.shape[0])) for i, val in enumerate(plot_df.index))
     else:
-        lab_cmap = dict((val, plt.get_cmap('tab10')(i)) for i, val in enumerate(plot_df.index))
-    fig, ax = plt.subplots()
+        lab_cmap = dict((val, plt.get_cmap('tab20')(i)) for i, val in enumerate(plot_df.index))
+
+    if ax is None:
+        fig, ax = plt.subplots()
 
     bottom  = np.zeros(len(genes))
 
@@ -686,3 +841,149 @@ def plot_weights_bar(nmf_model: intNMF,
     ax.legend(ncol=2)
     ax.tick_params(axis='x', labelrotation=45)
     return ax
+
+
+def plot_topic_by_group_bar(nmf_model: intNMF,
+                            cell_groups,
+                            title: Optional[str]=None,
+                            colours: Optional[list]=None,
+                            ax: Optional=None):
+    """Plot stacked bar chart. With topic weights plotted per cell annotation/grouping, usually cell type.
+
+        Parameters
+        ----------
+        nmf_model : intNMF
+            intNMF model with loadings to plot (.fit has been run)
+        cell_groups : list[str]
+            list-like of cell annotations.
+        title : str
+            plot title, default None
+        colour : list
+            list of colours, useful if number of annotations are more than 20
+            (mpl palette max)
+
+        Returns
+        -------
+        matplotlib ax
+    """
+
+    u_cells = pd.unique(cell_groups)
+    
+    # dict of boolean lists denoting cell membership
+    cells = {}
+    for cell in u_cells:
+        cells[cell] = cell_groups.values == cell
+    
+    # dict of factor scores by cell type
+    cell_factor_dict = {}
+    first = True
+    for factor in np.arange(nmf_model.k):
+        fac_vals = nmf_model.theta[:, factor]
+        
+        total = np.sum(fac_vals)
+        
+        for cell in cells.keys():
+            if first:
+                cell_factor_dict[cell] = [np.sum(fac_vals[cells[cell]])/total]
+            else:
+                cell_factor_dict[cell].append(np.sum(fac_vals[cells[cell]])/total)
+            
+        first = False
+    
+    # plot stacked bar chart of topic contributions to different cell groups
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    width = 0.5
+    bottom = np.zeros(nmf_model.k)
+    factors = np.arange(nmf_model.k)
+
+    for cell, topic_scores in cell_factor_dict.items():
+        ax.bar(factors, topic_scores, width, label=cell, bottom=bottom)
+        bottom += topic_scores
+    
+    if title is not None:
+        ax.set_title(title)
+    else:
+        ax.set_title("Relative sum of loadings")
+
+    ax.legend(bbox_to_anchor=(1.4, 0.8))
+
+    return ax
+
+
+def plot_group_topic_scores_bar(nmf_model: intNMF,
+                            cell_groups,
+                            title: Optional[str] = None,
+                            colours: Optional[list] = None,
+                            ax: Optional = None):
+    """Plot stacked bar chart. With topic weights plotted per cell annotation/grouping,
+        usually cell type.
+
+        Parameters
+        ----------
+        nmf_model : intNMF
+            intNMF model with loadings to plot (.fit has been run)
+        cell_groups : list[str]
+            list-like of cell annotations.
+        title : str
+            plot title, default None
+        colour : list
+            list of colours, useful if number of factors are more than 20
+            (mpl palette max)
+
+        Returns
+        -------
+        matplotlib ax
+    """
+
+    u_cells = pd.unique(cell_groups)
+    
+    # dict of boolean lists denoting cell membership
+    cells = {}
+    for cell in u_cells:
+        cells[cell] = cell_groups.values == cell
+
+    # dict of cell types by factors
+    factor_cell_dict = {}
+    first = True
+    cell_order = []
+    for cell in u_cells:
+        fac_vals = nmf_model.theta[cells[cell], :]
+        total = np.sum(fac_vals)
+        for factor in np.arange(nmf_model.k):
+            if first:
+                factor_cell_dict[factor] = [np.sum(fac_vals[:, factor])/total]
+            else:
+                factor_cell_dict[factor].append(np.sum(fac_vals[:, factor])/total)
+
+        first = False
+        cell_order.append(cell)
+
+    # plot stacked bar chart of topic contributions to different cell groups
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    width = 0.5
+    bottom = np.zeros(len(u_cells))
+    
+    for factor, topic_scores in factor_cell_dict.items():
+    #    print(factor, topic_scores)
+        if colours is not None:
+            ax.bar(cell_order, topic_scores, width, label=factor, bottom=bottom,
+                color=colours[factor])
+        else:
+            ax.bar(cell_order, topic_scores, width, label=factor, bottom=bottom)
+        bottom += topic_scores
+
+    #if title is not None:
+    #    ax.set_title(title)
+    else:
+        ax.set_title("Relative sum of loadings")
+
+    ax.legend(bbox_to_anchor=(1.2, 1), ncol=2)
+    ax.tick_params(axis='x', labelrotation=45)
+
+    return ax
+
+

@@ -10,6 +10,7 @@ from scipy import sparse
 import sys
 import logging
 from typing import Optional, Union, Mapping, List  # Special
+import pandas as pd
 
 
 class intNMF():
@@ -65,6 +66,24 @@ class intNMF():
         self.rand = seed
         self.rna_features = None
         self.atac_features = None
+        self.theta_df = None
+        self.phi_rna_df = None
+        self.phi_atac_df = None
+
+    def _set_theta_df(self, barcodes):
+         self.theta_df = pd.DataFrame(self.theta,
+                                      columns=['Topic' + str(i) for i in np.arange(self.k)],
+                                      index=barcodes)
+
+    def _set_phi_rna_df(self):
+        self.phi_rna_df =  pd.DataFrame(self.phi_rna,
+                                        columns=self.rna_features,
+                                        index=['Topic' + str(i) for i in np.arange(self.k)])
+        
+    def _set_phi_atac_df(self):
+        self.phi_rna_df =  pd.DataFrame(self.phi_atac,
+                                        columns=self.atac_features,
+                                        index=['Topic' + str(i) for i in np.arange(self.k)])
 
     def _add_feature_names(self, rna_names: List[str], atac_names: Optional[List[str]] = None):
         """
@@ -82,7 +101,7 @@ class intNMF():
 
         if atac_names is not None:
             if len(atac_names) != self.phi_atac.shape[1]:
-                print('atac deatures not added. Dims dont match')
+                print('atac features not added. Dims dont match')
             self.atac_features = atac_names
 
     def fit(self, rna_mat: Union[np.array,  sparse.csr_matrix], atac_mat: Union[np.array,  sparse.csr_matrix],
@@ -494,7 +513,7 @@ def log_tf_idf(mat_in, scale=10000):
     csr matrix
         TF-IDF transformed matrix
     """
-    mat = sparse.csr_matrix(mat_in)
+    mat = sparse.csr_matrix(mat_in, copy=True)
 
     cell_counts = mat.sum(axis=1)
     for row in range(len(cell_counts)):

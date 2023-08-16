@@ -10,6 +10,8 @@ import os
 import pickle as pkl
 from multiprocessing import Pool
 from functools import partial
+from kneed import KneeLocator
+
 
 def get_top_features(nmf_model:intNMF,
                      topics: Optional[list] = None,
@@ -28,8 +30,9 @@ def get_top_features(nmf_model:intNMF,
         Number of features
     modality : str, 'rna' | 'atac', default 'rna'
         modality fro which to return features
-    mode : str, 'abs' | 'diff', default 'abs'
-        select features based on absolute value or diff with other topics average
+    mode : str, 'abs' | 'diff' | 'inflection' | 'inflection_diff', default 'abs'
+        select features based on absolute value or diff with other topics average,
+        or use inflection point of the rank plot (either abs or diff).
     Returns
     -------
     list[str] of features from selected modality
@@ -54,17 +57,28 @@ def get_top_features(nmf_model:intNMF,
 
     if topics is None:
         topics = np.arange(nmf_model.k)
-    top_features = []
+
+    top_features = {}
+
     if mode == 'abs':
         for topic in topics:
-            top_features.append(list(phi_df.iloc[topic, :].sort_values(ascending=False)[0:n_features].index))
-
+            top_features[topic] = list(phi_df.iloc[topic, :].sort_values(ascending=False)[0:n_features].index)
     elif mode == 'diff':
         for topic in topics:
-            top_features.append(list((phi_df.iloc[topic, :] - phi_df.drop(phi_df.index[topic], axis=0).mean(axis=0)).sort_values(ascending=False)[0:n_features].index))
+            top_features[topic] = list((phi_df.iloc[topic, :] - phi_df.drop(phi_df.index[topic], axis=0).mean(axis=0)).sort_values(ascending=False)[0:n_features].index)
+    elif mode == 'inflection':
+        for topic in topics:
+            ranks = phi_df.iloc[topic, :].sort_values(ascending=False)
+            kneedle = KneeLocator(np.arange(len(ranks)), ranks.values, S=1.0, curve="convex", direction="decreasing")
+            top_features[topic] = list(ranks[ranks > kneedle.knee_y].index.values)
+    elif mode == 'inflection_diff':
+        for topic in topics:
+            ranks = (phi_df.iloc[topic, :] - phi_df.drop(phi_df.index[topic], axis=0).mean(axis=0)).sort_values(ascending=False)
+            kneedle = KneeLocator(np.arange(len(ranks)), ranks.values, S=1.0, curve="convex", direction="decreasing")
+            top_features[topic] = list(ranks[ranks > kneedle.knee_y].index.values)
 
-    return [item for topic_features in top_features for item in topic_features]
 
+    return top_features
 def load_multiome(file: str, labels: Optional[str] = None):
     """Function to load multiome data from .h5, .h5ad or .h5mu file types
 
