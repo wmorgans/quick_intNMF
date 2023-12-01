@@ -77,7 +77,7 @@ def view_embed(nmf_model: intNMF,
     if clustered == "max_topic":
 
         mat = nmf_model.theta/nmf_model.theta.max(axis=0)  # scale to max value of 1
-        max_idx = np.argmax(mat, axis=1)
+        max_idx = np.nanargmax(mat, axis=1)
         sorted_mat = np.zeros(mat.shape)
 
         new_idx = []
@@ -126,8 +126,26 @@ def view_embed(nmf_model: intNMF,
         fig.tight_layout()
 
     elif clustered:
-        ax = sns.clustermap(nmf_model.theta, method="complete", vmin=0, vmax=1,
+
+        if row_labels is None:
+            ax = sns.clustermap(nmf_model.theta, method="complete", vmin=0, vmax=1,
                             yticklabels='None', row_colors=row_labels)
+        else:
+            tmp_cmap = plt.get_cmap('tab10')
+
+            lab_cmap = dict((val, ["{}".format(val), tmp_cmap(i)]) for i, val in enumerate(pd.unique(row_labels)))
+            u_lab, u_col = map(list, zip(*lab_cmap.values()))
+
+            labels, colours =  map(list, zip(*[lab_cmap[el] for el in row_labels]))
+
+            ax = sns.clustermap(nmf_model.theta, method="complete", vmin=0, vmax=1,
+                            yticklabels='None', row_colors=colours)
+
+            handles = [Patch(facecolor=u_c) for u_c in u_col]
+            if legend:
+                plt.legend(handles, u_lab, title='Cells',
+                           bbox_to_anchor=(0.5, 1), bbox_transform=plt.gcf().transFigure,
+                           loc='upper center', ncol=3)    
 
 
     return ax
@@ -268,6 +286,20 @@ def correlation_plot(cor_mat, clustered: Optional[bool] = False, ax=None, figsiz
             ax = sns.heatmap(cor_mat, cmap='RdBu_r', annot=False,
                             annot_kws={"size": 7}, vmin=-1, vmax=1)
     else:
+        
+        k = min(cor_mat.shape)
+        row_names = col_names = np.arange(k)
+
+        #got row and col nmaes which aren't all nan
+        row_names = np.delete(row_names, np.argwhere(np.all(np.isnan(cor_mat), axis=1)))
+        col_names = np.delete(col_names, np.argwhere(np.all(np.isnan(cor_mat), axis=0)))
+
+        # drop rows and columns with all nans
+        cor_mat = cor_mat[np.ix_(~np.all(np.isnan(cor_mat), axis=1) , ~np.all(np.isnan(cor_mat), axis=0))]
+        
+
+        cor_mat = pd.DataFrame(cor_mat, index=row_names, columns=col_names)
+
         ax = sns.clustermap(cor_mat, method="complete", cmap='RdBu_r', annot=False,
                             annot_kws={"size": 7}, vmin=-1, vmax=1, figsize=figsize)
     return ax
@@ -310,6 +342,7 @@ def correlation_loadings(nmf_model: intNMF, modality: Optional[str]='both',
             Axes for figure. If clustered = False - matplotlib objects used otherwise seaborn objects used.
             If modality = 'both' list of axes is returned if matplotlib and Gridspec if seaborn.
     """
+
     rna_cor = np.round(np.corrcoef(nmf_model.phi_rna), 2)
     atac_cor = np.round(np.corrcoef(nmf_model.phi_atac), 2)
 
@@ -982,7 +1015,7 @@ def plot_group_topic_scores_bar(nmf_model: intNMF,
         ax.set_title("Relative sum of loadings")
 
     ax.legend(bbox_to_anchor=(1.2, 1), ncol=2)
-    ax.tick_params(axis='x', labelrotation=45)
+    ax.tick_params(axis='x', labelrotation=90)
 
     return ax
 

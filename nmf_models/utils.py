@@ -17,7 +17,8 @@ def get_top_features(nmf_model:intNMF,
                      topics: Optional[list] = None,
                      n_features: Optional[int] = 1,
                      modality: Optional[str] = 'rna',
-                     mode: Optional[str] = 'abs'):
+                     mode: Optional[str] = 'abs',
+                     thresh=1):
     """Get the highest ranked features from selected topics.
 
     Parameters
@@ -76,6 +77,8 @@ def get_top_features(nmf_model:intNMF,
             ranks = (phi_df.iloc[topic, :] - phi_df.drop(phi_df.index[topic], axis=0).mean(axis=0)).sort_values(ascending=False)
             kneedle = KneeLocator(np.arange(len(ranks)), ranks.values, S=1.0, curve="convex", direction="decreasing")
             top_features[topic] = list(ranks[ranks > kneedle.knee_y].index.values)
+    elif mode == 'thresh':
+        top_features[topic] = list(phi_df.iloc[topic, phi_df.iloc[topic, :] > thresh])
 
 
     return top_features
