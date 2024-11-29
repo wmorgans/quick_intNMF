@@ -163,12 +163,10 @@ class intNMF():
 
 
             #update theta/W
-            eit1 = time.perf_counter()
             rnaMHt = safe_sparse_dot(RNA_mat, phi_rna.T)
             rnaHHt = phi_rna.dot(phi_rna.T)
             atacMHt = safe_sparse_dot(ATAC_mat, phi_atac.T)
             atacHHt = phi_atac.dot(phi_atac.T)
-            eit1 = time.perf_counter() - eit1
 
             if i == 0:
                 scale = ((np.sum(rnaMHt*theta)/np.sum(rnaHHt*(theta.T.dot(theta)))) +
@@ -176,25 +174,21 @@ class intNMF():
                 theta=theta*scale
 
 
-            theta, theta_it = self._HALS_W(theta, rnaHHt, rnaMHt, atacHHt, atacMHt, eit1)
+            theta, theta_it = self._HALS_W(theta, rnaHHt, rnaMHt, atacHHt, atacMHt)
 
             #update phi_rna/H
 
-            eit1 = time.perf_counter()
             A_rna = safe_sparse_dot(theta.T, RNA_mat)
             B_rna = (theta.T).dot(theta)
-            eit1 = time.perf_counter() - eit1
 
-            phi_rna, phi_rna_it = self._HALS(phi_rna, B_rna, A_rna, eit1)
+            phi_rna, phi_rna_it = self._HALS(phi_rna, B_rna, A_rna)
 
             #update phi_atac/H
 
-            eit1 = time.perf_counter()
             A_atac = safe_sparse_dot(theta.T, ATAC_mat)
             B_atac = (theta.T).dot(theta)
-            eit1 = time.perf_counter() - eit1
 
-            phi_atac, phi_atac_it = self._HALS(phi_atac, B_atac, A_atac, eit1)
+            phi_atac, phi_atac_it = self._HALS(phi_atac, B_atac, A_atac)
 
             error_rna = np.sqrt(nM_rna - 2*np.sum(phi_rna*A_rna) + np.sum(B_rna*(phi_rna.dot(phi_rna.T))))
             error_atac = np.sqrt(nM_atac - 2*np.sum(phi_atac*A_atac) + np.sum(B_atac*(phi_atac.dot(phi_atac.T))))
@@ -238,7 +232,7 @@ class intNMF():
         del RNA_mat
         del ATAC_mat
 
-    def _HALS(self, H, WtW, WtM, eit1, alpha=0.5, delta=0.1):
+    def _HALS(self, H, WtW, WtM, delta=0.1):
         """Optimizing min_{V >= 0} ||M-UV||_F^2 with an exact block-coordinate descent.
 
         UtU and UtM are exprensive to compute so multiple updates are calcuated.
@@ -255,10 +249,6 @@ class intNMF():
             precomputed dense array
         WtM : Array-like
             precomputed dense array
-        eit1 : int
-            precompute time
-        alpha : float
-            control time based stop criteria
         delta : float
             control loss based stop criteria
 
@@ -271,17 +261,13 @@ class intNMF():
 
         """
         r, n = H.shape
-        eit2 = time.perf_counter()  # start time
         cnt = 1
         eps = 1
         eps0 = 1
-        eit3 = 0  # iteration time
         n_it = 0
 
-        while cnt == 1 or ((time.perf_counter()-eit2 < (eit1+eit3)*alpha) and (eps >= (delta**2)*eps0)):
+        while cnt == 1 or ((n_it < 10) and (eps >= (delta**2)*eps0)):
             nodelta = 0
-            if cnt == 1:
-                eit3 = time.perf_counter()
 
             for k in range(r):
                 deltaH = np.maximum((WtM[k, :]-WtW[k, :].dot(H))/WtW[k, k], -H[k, :])
@@ -292,16 +278,15 @@ class intNMF():
 
             if cnt == 1:
                 eps0 = nodelta
-                eit3 = time.perf_counter() - eit3
 
             eps = nodelta
             cnt = 0
             n_it += 1
-
+        
+        print(H[0,0], n_it)
         return H, n_it
 
-    def _HALS_W(self, W, rnaHHt, rnaMHt, atacHHt, atacMHt, eit1,
-                alpha=0.5, delta=0.1):
+    def _HALS_W(self, W, rnaHHt, rnaMHt, atacHHt, atacMHt, delta=0.1):
         """Optimizing min_{W >= 0} ||X1-WH1||_F^2 + ||X2-WH2||_F^2.
 
         An exact block-coordinate descent scheme is applied to update W. HHt
@@ -326,10 +311,6 @@ class intNMF():
             precomputed dense array
         rnaMHt : array-like
             precomputed dense array
-        eit1 : int
-            precompute time
-        alpha : float
-            Control time based stop criteria
         delta : float
             control loss based stop criteria
 
@@ -341,19 +322,14 @@ class intNMF():
             number of iterations (usually 6/7)
         """
         n, K = W.shape
-        eit2 = time.perf_counter()  # start time
         cnt = 1
         eps = 1
         eps0 = 1
-        eit3 = 0  # iteration time
         n_it = 0
         mod1_skew = self.mod1_skew
 
-        while cnt == 1 or ((time.perf_counter()-eit2 < (eit1+eit3)*alpha) and (eps >= (delta**2)*eps0)):
+        while cnt == 1 or ((n_it < 10) and (eps >= (delta**2)*eps0)):
             nodelta=0
-            if cnt == 1:
-                eit3 = time.perf_counter()
-
 
             for k in range(K):
                 #print(W.shape, atacHHt.shape)
@@ -368,12 +344,12 @@ class intNMF():
 
             if cnt == 1:
                 eps0 = nodelta
-                eit3 = time.perf_counter() - eit3
 
             eps = nodelta
             cnt = 0
 
             n_it += 1
+        print(W[0,0], n_it)
 
         return W, n_it
 
